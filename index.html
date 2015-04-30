@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/style.css" type="text/css" />
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+    <script src="script/script.js"></script>
 </head>
 <body>
 <div class="row">
@@ -23,8 +24,8 @@
     <p>- you have three minutes to complete as many levels as you can before you piss your pants</p>
     </div>
   <div class="col-md-4" id="middle">
-      <img src="pics/pic2.png" alt="Shit" class="poo">
-      <button type="button" class="btn btn-large btn-warning" onClick="alert('Nope.')">PLAY!</button>
+      <img src="pics/pic2.png" alt="Shit" class ="poo" id="startImage">
+      <button type="button" class="btn btn-large btn-warning" id="start" onClick="changeGame()">Play!</button>
   </div>
   <div class="col-md-4" id="score"><h2>Score Board:</h2>
     <h3>1. 5450</h3>
