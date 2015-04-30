@@ -12,4 +12,14 @@ function showSolution(){
 	var pic = document.getElementById('mainGame');
 	pic.src = "pics/RushToFlush-Solution-320x480.png";
 	pic.id = "solution";
+	var btn = document.getElementById('start');
+	btn.onclick = showGame;
 };
+function showGame(){
+	var pic = document.getElementById('solution');
+	pic.src = "pics/RushToFlush-Game-320x480.png";
+	pic.id = "game";
+	var btn = document.getElementById('start');
+	pic.id = "startImage";
+	btn.onclick = changeGame;
+}
