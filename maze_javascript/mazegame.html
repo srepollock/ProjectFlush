@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"> 
+	<head> <meta charset="utf-8">
+	<title>Practice with JavaScript</title> 
+	<style>
+		#canvas{
+			border: 1px solid black;
+		}
+	</style>
+	</head> 
+	<body> 
+		Width: <input tyoe="text" name="textInput" id="widthInput"><br>
+		Height: <input tyoe="text" name="textInput" id="heightInput"><br><br>
+		
+		Target x: <input tyoe="text" name="textInput" id="targetXInput"><br>
+		Target y: <input tyoe="text" name="textInput" id="targetYInput"><br><br>
+		
+		<canvas id="canvas" height="400px" width="500px"></canvas>
+	
+		<script src="externaljavascript.js">
+		</script>
+		<br>
+		<input type="button" onclick="drawGraphics()" value="Draw graphics">
+		<input type="button" onclick="generateMap()" value="Generate Maze">
+		<input type="button" onclick="doPathfinding()" value="Find path">
+		<br>
+		<div id="printout"></div>
+		</body>
+ </html> 
