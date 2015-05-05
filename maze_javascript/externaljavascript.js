@@ -1,5 +1,9 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
+canvas.addEventListener("mousedown", doMouseDown, true);
+
+var SCREENWIDTH = canvas.width;
+var SCREENHEIGHT = canvas.height;
 
 var map;/*Array that the maze is kept within*/
 var distanceMap;/*A map of all move distances from the starting point*/
@@ -10,7 +14,11 @@ var floor = new Image();
 floor.src="floor.png";
 var path = new Image();
 path.src="path.png";
+var character = new Image();
+character.src="character.png";
 var imgSize = 16;/*pixel width and height of tiles*/
+
+var solutionVisible = true;
 
 var width;/*Maze width in tiles*/
 var height;/*Maze width in tiles*/
@@ -21,10 +29,16 @@ var targety;/*Pathfinding target's y coordinate*/
 var startx=1;/*Starting point x coordinate*/
 var starty=1;/*Starting point y coordinate*/
 
+var playerPositionx;
+var playerPositiony;
+
 /**Initializes the map and prints initial tiles to the screen**/
 function drawGraphics(){
 	width = document.getElementById("widthInput").value;/*Grabbing height and width from the html input fields*/
 	height = document.getElementById("heightInput").value;
+	
+	playerPositionx=startx;/*Initializing player position*/
+	playerPositiony=starty;
 	
 	map=new Array(width);/*Creating first dimension of the array*/
 	distanceMap=new Array(width);
@@ -73,11 +87,13 @@ function drawMaze(){
 		for(var j=0; j<width; j++){
 			if(map[j][i]=='.'){/*Wall*/
 				context.drawImage(wall, j*imgSize, i*imgSize, imgSize, imgSize);
-			} else if(map[j][i]=='P'){/*Path*/
+			} else if(map[j][i]=='P'&&solutionVisible){/*Path*/
 				context.drawImage(path, j*imgSize, i*imgSize, imgSize, imgSize);
 			}else {/*Ground*/
 				context.drawImage(floor, j*imgSize, i*imgSize, imgSize, imgSize);
 			}
+			if(j==playerPositionx&&i==playerPositiony)
+				context.drawImage(character, j*imgSize, i*imgSize, imgSize, imgSize);
 			context.fillText(distanceMap[j][i], j*imgSize, (i+1)*imgSize);
 		}
 	}
@@ -240,4 +256,60 @@ function finalPath(curx, cury){
 		}
 	}
 	return false;
+}
+
+function solutionVisibility(){
+	if(solutionVisible){
+		solutionVisible=false;
+	}else{
+		solutionVisible=true;
+	}
+	drawMaze();
+}
+
+function doMouseDown(event){
+	var x = event.pageX;
+	var y = event.pageY-177;
+
+	if(x>SCREENWIDTH/2
+	&&y>(SCREENHEIGHT/2)-(x-(SCREENWIDTH/2))
+	&&y<(SCREENHEIGHT/2)+(x-(SCREENWIDTH/2))){
+		moveRight();
+	}else if(x<SCREENWIDTH/2
+	&&y>(SCREENHEIGHT/2)-((SCREENWIDTH/2)-x)
+	&&y<(SCREENHEIGHT/2)+((SCREENWIDTH/2)-x)){
+		moveLeft();
+	} else if(y>SCREENHEIGHT/2){
+		moveDown();
+	} else if(y<SCREENHEIGHT/2){
+		moveUp();
+	}
+}
+
+/**
+Movement functions.  Pretty self explanatory.
+**/
+function moveDown(){
+	if(map[playerPositionx][playerPositiony+1]!='.'){
+		playerPositiony++;
+	}
+	drawMaze();
+}
+function moveUp(){
+	if(map[playerPositionx][playerPositiony-1]!='.'){
+		playerPositiony--;
+	}
+	drawMaze();
+}
+function moveRight(){
+	if(map[playerPositionx+1][playerPositiony]!='.'){
+		playerPositionx++;
+	}
+	drawMaze();
+}
+function moveLeft(){
+	if(map[playerPositionx-1][playerPositiony]!='.'){
+		playerPositionx--;
+	}
+	drawMaze();
 }
