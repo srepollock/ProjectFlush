@@ -1,8 +1,8 @@
 zebra.ready(function() {
     // creates a canvas to put the ui on
-    var canvas = new zebra.ui.zCanvas("can");
+    var canvas = new zebra.ui.zCanvas('can');
     // image for the background
-    var toilet = new zebra.ui.ImagePan("./pics/pic2.png");
+    var toilet = new zebra.ui.ImagePan('./pics/pic2.png');
     // play button
     var play = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/PlayButton.png"));
     // instructions button
