@@ -1,36 +1,3 @@
-zebra.ready(function() {
-                    // creates a canvas to put the ui on
-                    var can = new zebra.ui.zCanvas("canMid");
-                    // image for the background
-                    var toilet = new zebra.ui.ImagePan("./pics/pic2.png");
-                    // play button
-                    var play = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/PlayButton.png"));
-                    // instructions button
-                    var inst = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/InstructionsButton.png"));
-                    // basic functionality
-                    // *later on need to add sounds to this
-                    play.bind(function() {
-                        create();
-                    });
-                    inst.bind(function() {
-                        window.alert("Instructions Pressed");
-                    });
-                    // sets a bland border around the canvas
-                    can.setBorder(zebra.ui.borders.plain);
-                    // Sets the layout to have TOP, CENTER, LEFT, RIGHT, BOTTOM
-                    can.root.setLayout(new zebra.layout.BorderLayout(8));
-                    can.root.add(zebra.layout.CENTER, toilet);
-                    // Creates a new panel with a new layout inside it called a FlowLayout
-                    // This is just to easily flow the buttons onto the page
-                    var botP = new zebra.ui.Panel(new zebra.layout.FlowLayout(
-                        zebra.layout.CENTER, zebra.layout.BOTTOM, zebra.layout.VERTICAL, 2));
-                    // Adds the buttons to the panel
-                    botP.add(play);
-                    botP.add(inst);
-                    // Adds the panel to the page
-                    can.root.add(zebra.layout.BOTTOM, botP);
-                });
-
 var canvas = document.getElementById("canGame");
 var context = canvas.getContext("2d");
 canvas.addEventListener("mousedown", doMouseDown, true);
@@ -460,10 +427,4 @@ function randomizeExit(){
 
 function onPath(){
 	return map[playerPositionx][playerPositiony]=='P';
-}
-
-function create(){
-	drawGraphics();
-	generateMap();
-	doPathfinding();
 }

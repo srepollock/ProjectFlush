@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"> 
+	<head> <meta charset="utf-8">
+	<title>Practice with JavaScript</title> 
+	<style>
+		#game{
+			border: 1px solid black;
+		}
+	</style>
+	</head> 
+	<body> 
+		Width and Height of the grid on screen
+		<br />
+		Width: <input tyoe="text" name="textInput" id="widthInput"><br>
+		Height: <input tyoe="text" name="textInput" id="heightInput"><br><br>
+		
+		(x,y) Coordinate of the position to find.
+		<br />
+		Target x: <input tyoe="text" name="textInput" id="targetXInput"><br>
+		Target y: <input tyoe="text" name="textInput" id="targetYInput"><br><br>
+		
+		<canvas height="400px" width="400px" id="game"></canvas>
+	
+		<script src="externaljavascript.js">
+		</script>
+		<br>
+		
+		<input type="button" onclick="create()" value="Create">
+		<br>
+		<input type="button" onclick="solutionVisibility()" value="Solution">
+		<div id="printout"></div>
+		</body>
+ </html> 
