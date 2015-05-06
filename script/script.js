@@ -1,6 +1,8 @@
+var someCan;
 zebra.ready(function() {
                     // creates a canvas to put the ui on
                     var can = new zebra.ui.zCanvas("canMid");
+                    someCan = can;
                     // image for the background
                     var toilet = new zebra.ui.ImagePan("./pics/pic2.png");
                     // play button
@@ -36,11 +38,11 @@ var context = canvas.getContext("2d");
 canvas.addEventListener("mousedown", doMouseDown, true);
 
 var moveSound = new Audio();
-moveSound.src = "move.wav";
+moveSound.src = "./sound/move.wav";
 var badMoveSound = new Audio();
-badMoveSound.src = "badMoveSound.wav";
+badMoveSound.src = "./sound/badMoveSound.wav";
 var levelComplete = new Audio();
-levelComplete.src = "levelComplete.wav";
+levelComplete.src = "./sound/levelComplete.wav";
 
 var SCREENWIDTH = canvas.width;
 var SCREENHEIGHT = canvas.height;
@@ -49,13 +51,13 @@ var map;/*Array that the maze is kept within*/
 var distanceMap;/*A map of all move distances from the starting point*/
 
 var wall = new Image();
-wall.src="wall.png";
+wall.src="./pics/wall.png";
 var floor = new Image();
-floor.src="floor.png";
+floor.src="./pics/floor.png";
 var path = new Image();
-path.src="path.png";
+path.src="./pics/path.png";
 var character = new Image();
-character.src="character.png";
+character.src="./pics/character.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var solutionVisible = true;
@@ -466,4 +468,14 @@ function create(){
 	drawGraphics();
 	generateMap();
 	doPathfinding();
+}
+
+function showCanvas(){
+	if(someCan.style.visibility=='visible'){
+		canvas.style.visibility='visible';
+		someCan.style.visibility='hidden';
+	}else{
+		canvas.style.visibility='hidden';
+		someCan.style.visibility='visible';
+	}
 }
