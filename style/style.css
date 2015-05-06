@@ -33,7 +33,6 @@ p {
     color: black;
     font-size: medium;
     text-shadow: none;
-    text-align: left;
     font-family: "Courier New", monospace;
 }
 
@@ -51,7 +50,7 @@ p {
 }
 
 div #about {
-    text-align: middle;
+    text-align: center;
     font-family: "Courier New", monospace;
     background: #FFFFD4;
     border-radius: 25px;
