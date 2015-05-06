@@ -3,11 +3,13 @@ var context = canvas.getContext("2d");
 canvas.addEventListener("mousedown", doMouseDown, true);
 
 var moveSound = new Audio();
-moveSound.src = "move.wav";
+moveSound.src = "./sound/move.wav";
 var badMoveSound = new Audio();
-badMoveSound.src = "badMoveSound.wav";
+badMoveSound.src = "./sound/badMoveSound.wav";
 var levelComplete = new Audio();
-levelComplete.src = "levelComplete.wav";
+levelComplete.src = "./sound/levelComplete.wav";
+var gameOverSound = new Audio();
+gameOverSound = "./sound/gameOver.wav";
 
 var SCREENWIDTH = canvas.width;
 var SCREENHEIGHT = canvas.height;
@@ -16,21 +18,28 @@ var map;/*Array that the maze is kept within*/
 var distanceMap;/*A map of all move distances from the starting point*/
 
 var wall = new Image();
-wall.src="wall.png";
+wall.src="./pics/wall.png";
 var floor = new Image();
-floor.src="floor.png";
+floor.src="./pics/floor.png";
 var path = new Image();
-path.src="path.png";
+path.src="./pics/path.png";
 var character = new Image();
-character.src="character.png";
+character.src="./pics/character.png";
+var gameOverGraphic = new Image();
+gameOverGraphic.src="./pics/gameOver.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var solutionVisible = true;
 var limitedSight = true;
 var showDistances = false;
 
-var width;/*Maze width in tiles*/
-var height;/*Maze width in tiles*/
+var initialWidth = 10;
+var initialHeight = 10;
+var width = initialWidth;/*Maze width in tiles*/
+var height = initialHeight;/*Maze width in tiles*/
+
+var offsetx;/*offset for drawing the maze to keep it centered*/
+var offsety;
 
 var targetx;/*Pathfinding target's x coordinate*/
 var targety;/*Pathfinding target's y coordinate*/
@@ -41,10 +50,39 @@ var starty=1;/*Starting point y coordinate*/
 var playerPositionx;
 var playerPositiony;
 
+var gameLevel = 1;
+var score = 0;
+
+var timerVar=setInterval(function(){timerFunction()},1000);
+var timeLeft = 0;
+var startingGameTime = 180;
+var bonusTimer = 100;
+
+var isGameOver = false;
+
+
+testingOutput();
+
+/*Initializes a new game.*/
+function startGame(){
+	gameLevel=0;
+	score=0;
+	timeLeft=startingGameTime;
+	bonusTimer=100;	
+	width = initialHeight;
+	height = initialWidth;
+	drawGraphics();	
+	generateMap();	
+	randomizeExit();
+	doPathfinding();
+	solutionVisible=true;
+	limitedSight=false;
+	drawMaze();
+	isGameOver=false;
+}
+
 /**Initializes the map and prints initial tiles to the screen**/
 function drawGraphics(){
-	width = document.getElementById("widthInput").value;/*Grabbing height and width from the html input fields*/
-	height = document.getElementById("heightInput").value;
 	
 	playerPositionx=startx;/*Initializing player position*/
 	playerPositiony=starty;
@@ -80,8 +118,6 @@ function generateMap(){
 Runs pathfinding algorithm to find the shortest path to the desired space.
 **/
 function doPathfinding(){
-	targetx = document.getElementById("targetXInput").value;/*Grabbing target coordinates from html input fields*/
-	targety = document.getElementById("targetYInput").value;
 	findPath(startx,starty,1);/*Finds all the distance to each point on the map from the starting point*/
 	finalPath(targetx, targety);/*Creates the final path from the desired point back to the starting point*/
 	drawMaze();
@@ -91,6 +127,8 @@ function doPathfinding(){
 Draws the current maze tiles to the canvas
 **/
 function drawMaze(){
+	offsetx = (canvas.width/2)-(width*imgSize)/2;
+	offsety = (canvas.height/2)-(height*imgSize)/2;
 	context.clearRect ( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
 	for(var i=0; i<height; i++){
 		for(var j=0; j<width; j++){
@@ -98,21 +136,22 @@ function drawMaze(){
 			(j>=playerPositionx-1&&j<=playerPositionx+1
 			&&i>=playerPositiony-1&&i<=playerPositiony+1)){
 				if(map[j][i]=='.'){/*Wall*/
-					context.drawImage(wall, j*imgSize, i*imgSize, imgSize, imgSize);
+					context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				} else if(map[j][i]=='P'&&solutionVisible){/*Path*/
-					context.drawImage(path, j*imgSize, i*imgSize, imgSize, imgSize);
+					context.drawImage(path, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				}else {/*Ground*/
-					context.drawImage(floor, j*imgSize, i*imgSize, imgSize, imgSize);
+					context.drawImage(floor, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				}
 				if(j==playerPositionx&&i==playerPositiony)
-					context.drawImage(character, j*imgSize, i*imgSize, imgSize, imgSize);
+					context.drawImage(character, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				if(showDistances)
-					context.fillText(distanceMap[j][i], j*imgSize, (i+1)*imgSize);
+					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
 			}else{
-				context.drawImage(wall, j*imgSize, i*imgSize, imgSize, imgSize);
+				context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
 		}
 	}
+	testingOutput();
 }
 
 
@@ -286,8 +325,11 @@ function solutionVisibility(){
 }
 
 function doMouseDown(event){
-	var x = event.pageX;
-	var y = event.pageY-177;
+	if(!isGameOver){
+	var x = event.pageX-canvas.offsetLeft;
+	var y = event.pageY-canvas.offsetTop;
+	
+	if(solutionVisible)solutionVisibility();
 
 	if(x>SCREENWIDTH/2
 	&&y>(SCREENHEIGHT/2)-(x-(SCREENWIDTH/2))
@@ -301,6 +343,7 @@ function doMouseDown(event){
 		moveDown();
 	} else if(y<SCREENHEIGHT/2){
 		moveUp();
+	}
 	}
 }
 
@@ -375,17 +418,27 @@ function moveLeft(){
 function checkForExit(){
 	if(playerPositionx==targetx&&playerPositiony==targety){
 		levelComplete.play();
-		if(parseInt(width)+2<=24&&parseInt(height)+2<=24){
-			document.getElementById("widthInput").value=parseInt(width)+2;
-			document.getElementById("heightInput").value=parseInt(height)+2;
+		score+=100+bonusTimer;
+		gameLevel++;
+		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
+			width+=2;
+			height+=2;
 		}
 		drawGraphics();
 		generateMap();
-		randomizeExit();		
-		document.getElementById("targetXInput").value=parseInt(targetx);
-		document.getElementById("targetYInput").value=parseInt(targety);
+		randomizeExit();
 		doPathfinding();
+		solutionVisibility();
+		testingOutput();
 	}
+}
+
+/**
+just a function for printing out info prior to the ui
+**/
+function testingOutput(){
+	var output = "Level: "+gameLevel+"  Score: "+score+"  Time: "+timeLeft;
+	context.fillText(output, 10, canvas.height-20);
 }
 
 
@@ -427,4 +480,22 @@ function randomizeExit(){
 
 function onPath(){
 	return map[playerPositionx][playerPositiony]=='P';
+}
+
+function timerFunction(){
+	if(timeLeft>0){
+	timeLeft--;
+	if(bonusTimer>0)bonusTimer--;
+	drawMaze();
+	if(timeLeft==0)gameOverSound.play();
+	}else{
+		isGameOver=true;
+		drawGameOver();
+	}
+}
+
+function drawGameOver(){
+	context.clearRect ( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
+	context.drawImage(gameOverGraphic, (canvas.width/2)-82, (canvas.width/2)-154);
+	testingOutput();
 }

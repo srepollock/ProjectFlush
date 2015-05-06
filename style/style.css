@@ -63,3 +63,7 @@ div #about {
     font-family: "Courier New", monospace;
     border-radius: 25px;
 }
+
+#canGame {
+    border: 1px solid black;
+}
