@@ -7,6 +7,8 @@ zebra.ready(function() {
 	var play = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/PlayButton.png"));
 	// instructions button
 	var inst = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/InstructionsButton.png"));
+	// leaderboards button
+	var lead = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/LeaderboardsButton.png"));
 	// basic functionality
 	// *later on need to add sounds to this
 	play.bind(function() {
@@ -15,6 +17,9 @@ zebra.ready(function() {
 	inst.bind(function() {
 		window.alert("Instructions Pressed");
 	});
+	lead.bind(function() {
+		window.location.href = "leader.html";
+	})
 	// sets a bland border around the canvas
 	can.setBorder(zebra.ui.borders.plain);
 	// Sets the layout to have TOP, CENTER, LEFT, RIGHT, BOTTOM
@@ -27,6 +32,7 @@ zebra.ready(function() {
 	// Adds the buttons to the panel
 	botP.add(play);
 	botP.add(inst);
+	botP.add(lead);
 	// Adds the panel to the page
 	can.root.add(zebra.layout.BOTTOM, botP);
 });
