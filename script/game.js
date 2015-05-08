@@ -57,7 +57,7 @@ var score = 0;
 
 var timerVar=setInterval(function(){timerFunction()},1000);
 var timeLeft = 0;
-var startingGameTime = 15;
+var startingGameTime = 180;
 var bonusTimer = 100;
 
 var isMenuScreen = true;
@@ -507,7 +507,6 @@ function onPath(){
 function timerFunction(){
 	if(isGameScreen){
 	if(timeLeft>0){
-		if(timeLeft<10)wallSound.play();
 	timeLeft--;
 	if(bonusTimer>0)bonusTimer--;
 	drawMaze();
