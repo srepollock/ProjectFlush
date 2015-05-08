@@ -1,6 +1,5 @@
 body {
-    background: #E6F9FF;  
-    
+    background: #E6F9FF;
 }
 
 h1 {
@@ -12,41 +11,28 @@ h1 {
     margin-bottom: 20px;
 }
 
-img.poo {
+#poo {
     display: block;
-    width: 320px;
-    height: 191px;
+    width: 490px;
+    height: 281px;
     margin-top: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin: 0 auto;
 }
 
 #middle {
     text-align: center;
     margin-bottom: 30px;
+    align-content: center; 
 }
 
 button {
     margin-top: 30px;   
 }
 
-#inst {
-    text-align: center;
-    color: #FAFAFA;
-    font-size: 200%;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    border-radius: 25px;
-    background: #FFFFD4;
-    padding: 20px;
-    height: auto;
-}
-
-p {
+li {
     color: black;
     font-size: medium;
     text-shadow: none;
-    text-align: left;
     font-family: "Courier New", monospace;
 }
 
@@ -59,15 +45,25 @@ p {
     background: #FFFFD4;
     padding: 20px;
     height: auto;
+    margin-bottom: 50px;
+
 }
 
-.inst {
+div #about {
     text-align: center;
-    color: #FAFAFA;
-    font-size: 200%;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    border-radius: 25px;
+    font-family: "Courier New", monospace;
     background: #FFFFD4;
-    padding: 20px;
-    height: auto;
+    border-radius: 25px;
+    margin-top: 20px;
+}
+
+#bar {
+    text-align: center;
+    font-size: medium;
+    font-family: "Courier New", monospace;
+    border-radius: 25px;
+}
+
+#canGame {
+    border: 1px solid black;
 }
