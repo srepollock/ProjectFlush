@@ -7,7 +7,7 @@ moveSound.src = "./sound/move.wav";
 var badMoveSound = new Audio();
 badMoveSound.src = "./sound/badMoveSound.wav";
 var levelComplete = new Audio();
-levelComplete.src = "./sound/levelComplete.wav";
+levelComplete.src = "./sound/levelComplete.mp3";
 var gameOverSound = new Audio();
 gameOverSound = "./sound/gameOver.wav";
 
