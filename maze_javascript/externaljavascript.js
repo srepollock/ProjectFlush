@@ -9,7 +9,9 @@ badMoveSound.src = "badMoveSound.wav";
 var levelComplete = new Audio();
 levelComplete.src = "levelComplete.wav";
 var gameOverSound = new Audio();
-gameOverSound = "gameOver.wav";
+gameOverSound.src = "gameOverSound.wav";
+var wallSound = new Audio();
+wallSound.src = "wall.wav";
 
 var SCREENWIDTH = canvas.width;
 var SCREENHEIGHT = canvas.height;
@@ -58,14 +60,18 @@ var timeLeft = 0;
 var startingGameTime = 180;
 var bonusTimer = 100;
 
+var isMenuScreen = true;
+var isInstructionScreen = false;
+var isGameScreen = false;
 var isGameOver = false;
 
 
-testingOutput();
-
 /*Initializes a new game.*/
 function startGame(){
-	gameLevel=0;
+	isGameScreen = true;
+	isMenuScreen = false;
+	isInstructionScreen = false;
+	gameLevel=1;
 	score=0;
 	timeLeft=startingGameTime;
 	bonusTimer=100;	
@@ -353,6 +359,7 @@ Movement functions.  Pretty self explanatory.
 function moveDown(){
 	if(map[playerPositionx][playerPositiony+1]!='.'){
 		if(map[playerPositionx][playerPositiony+1]=='P'){
+			moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -362,6 +369,9 @@ function moveDown(){
 			playerPositionx=startx;
 			playerPositiony=starty;
 		}
+	}else{
+		wallSound.currentTime=0;
+		wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -369,6 +379,7 @@ function moveDown(){
 function moveUp(){
 	if(map[playerPositionx][playerPositiony-1]!='.'){
 		if(map[playerPositionx][playerPositiony-1]=='P'){
+			moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -378,6 +389,9 @@ function moveUp(){
 			playerPositionx=startx;
 			playerPositiony=starty;
 		}
+	}else{
+		wallSound.currentTime=0;
+		wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -385,6 +399,7 @@ function moveUp(){
 function moveRight(){
 	if(map[playerPositionx+1][playerPositiony]!='.'){
 		if(map[playerPositionx+1][playerPositiony]=='P'){
+			moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -394,6 +409,9 @@ function moveRight(){
 			playerPositionx=startx;
 			playerPositiony=starty;
 		}
+	}else{
+		wallSound.currentTime=0;
+		wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -401,6 +419,7 @@ function moveRight(){
 function moveLeft(){
 	if(map[playerPositionx-1][playerPositiony]!='.'){
 		if(map[playerPositionx-1][playerPositiony]=='P'){
+			moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -410,6 +429,9 @@ function moveLeft(){
 			playerPositionx=startx;
 			playerPositiony=starty;
 		}
+	}else{
+		wallSound.currentTime=0;
+		wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -483,14 +505,16 @@ function onPath(){
 }
 
 function timerFunction(){
+	if(isGameScreen){
 	if(timeLeft>0){
 	timeLeft--;
 	if(bonusTimer>0)bonusTimer--;
 	drawMaze();
-	if(timeLeft==0)gameOverSound.play();
-	}else{
+	}else if (!isGameOver){
+		gameOverSound.play();
 		isGameOver=true;
 		drawGameOver();
+	}
 	}
 }
 
