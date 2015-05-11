@@ -39,6 +39,8 @@ var downArrowGraphic = new Image();
 downArrowGraphic.src="arrowDown.png";
 var fingerGraphic = new Image();
 fingerGraphic.src="finger.png";
+var toiletGraphic = new Image();
+toiletGraphic.src="toilet.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var solutionVisible = true;
@@ -161,6 +163,8 @@ function drawMaze(){
 				}
 				if(j==playerPositionx&&i==playerPositiony)
 					context.drawImage(character, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
+				if(j==targetx&&i==targety)
+					context.drawImage(toiletGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				if(showDistances)
 					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
 			}else{
