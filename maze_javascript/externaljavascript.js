@@ -29,6 +29,16 @@ var character = new Image();
 character.src="character.png";
 var gameOverGraphic = new Image();
 gameOverGraphic.src="gameOver.png";
+var leftArrowGraphic = new Image();
+leftArrowGraphic.src="arrowLeft.png";
+var rightArrowGraphic = new Image();
+rightArrowGraphic.src="arrowRight.png";
+var upArrowGraphic = new Image();
+upArrowGraphic.src="arrowUp.png";
+var downArrowGraphic = new Image();
+downArrowGraphic.src="arrowDown.png";
+var fingerGraphic = new Image();
+fingerGraphic.src="finger.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var solutionVisible = true;
@@ -59,12 +69,13 @@ var timerVar=setInterval(function(){timerFunction()},1000);
 var timeLeft = 0;
 var startingGameTime = 180;
 var bonusTimer = 100;
+var showMapPause =0;
 
 var isMenuScreen = true;
 var isInstructionScreen = false;
 var isGameScreen = false;
 var isGameOver = false;
-
+var controlVisualVisible = true;
 
 /*Initializes a new game.*/
 function startGame(){
@@ -154,6 +165,17 @@ function drawMaze(){
 					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
 			}else{
 				context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
+			}
+			if(controlVisualVisible){
+				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
+				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
+				if(timeLeft%2==0){
+					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
+				}else{
+					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2)-20);
+				}
+				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
+				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-20-downArrowGraphic.height);
 			}
 		}
 	}
@@ -331,7 +353,8 @@ function solutionVisibility(){
 }
 
 function doMouseDown(event){
-	if(!isGameOver){
+	controlVisualVisible=false;
+	if(!isGameOver&&showMapPause==0){
 	var x = event.pageX-canvas.offsetLeft;
 	var y = event.pageY-canvas.offsetTop;
 	
@@ -446,6 +469,7 @@ function checkForExit(){
 			width+=2;
 			height+=2;
 		}
+		showMapPause = 2;
 		drawGraphics();
 		generateMap();
 		randomizeExit();
@@ -505,6 +529,7 @@ function onPath(){
 }
 
 function timerFunction(){
+	if(showMapPause>0)showMapPause--;
 	if(isGameScreen){
 	if(timeLeft>0){
 	timeLeft--;
