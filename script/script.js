@@ -1,45 +1,38 @@
-function changeGame(){
-	var pic = document.getElementById('startImage');
-	pic.src = "pics/RushToFlush-Main-320x480.png";
-	pic.id = "mainGame";
-	pic.className = "";
-	var btn = document.getElementById('start');
-	btn.onclick = showControls;
-	btn.innerHTML = "Next";
-};
-function showControls(){
-	var pic = document.getElementById('mainGame');
-	pic.src = "pics/RushToFlush-Controls-320x480.png";
-	pic.id = "controls";
-	var btn = document.getElementById('start');
-	btn.onclick = showInstructions;
-};
-function showInstructions(){
-	var pic = document.getElementById('controls');
-	pic.src = "pics/RushToFlush-Instructions-320x480.png";
-	pic.id = "instructions";
-	var btn = document.getElementById('start');
-	btn.onclick = showSolution;
-};
-function showSolution(){
-	var pic = document.getElementById('instructions');
-	pic.src = "pics/RushToFlush-Solution-320x480.png";
-	pic.id = "solution";
-	var btn = document.getElementById('start');
-	btn.onclick = showGame;
-};
-function showGame(){
-	var pic = document.getElementById('solution');
-	pic.src = "pics/RushToFlush-Game-320x480.png";
-	pic.id = "game";
-	var btn = document.getElementById('start');
-	btn.onclick = showEnd;
-};
-function showEnd(){
-	var pic = document.getElementById('game');
-	pic.src = "pics/RushToFlush-GameOver-320x480.png";
-	pic.id = "end";
-	var btn = document.getElementById('start');
-	pic.id = "startImage";
-	btn.onclick = changeGame;
-};
+zebra.ready(function() {
+	// creates a canvas to put the ui on
+	var can = new zebra.ui.zCanvas("canMid");
+	// image for the background
+	var toilet = new zebra.ui.ImagePan("./pics/pic2.png");
+	// play button
+	var play = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/PlayButton.png"));
+	// instructions button
+	var inst = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/InstructionsButton.png"));
+	// leaderboards button
+	var lead = new zebra.ui.Button(new zebra.ui.ImagePan("./pics/LeaderboardsButton.png"));
+	// basic functionality
+	// *later on need to add sounds to this
+	play.bind(function() {
+		window.location.href = "game.html";
+	});
+	inst.bind(function() {
+		window.alert("Instructions Pressed");
+	});
+	lead.bind(function() {
+		window.location.href = "leader.html";
+	})
+	// sets a bland border around the canvas
+	can.setBorder(zebra.ui.borders.plain);
+	// Sets the layout to have TOP, CENTER, LEFT, RIGHT, BOTTOM
+	can.root.setLayout(new zebra.layout.BorderLayout(8));
+	can.root.add(zebra.layout.CENTER, toilet);
+	// Creates a new panel with a new layout inside it called a FlowLayout
+	// This is just to easily flow the buttons onto the page
+	var botP = new zebra.ui.Panel(new zebra.layout.FlowLayout(
+		zebra.layout.CENTER, zebra.layout.BOTTOM, zebra.layout.VERTICAL, 2));
+	// Adds the buttons to the panel
+	botP.add(play);
+	botP.add(inst);
+	botP.add(lead);
+	// Adds the panel to the page
+	can.root.add(zebra.layout.BOTTOM, botP);
+});
