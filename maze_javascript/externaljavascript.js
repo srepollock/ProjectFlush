@@ -43,6 +43,8 @@ var toiletGraphic = new Image();
 toiletGraphic.src="toilet.png";
 var instructionGraphic = new Image();
 instructionGraphic.src="instructions.png";
+var darkSquareGraphic = new Image();
+darkSquareGraphic.src="darkSquare.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var fingerGraphicDown = false;
@@ -172,7 +174,7 @@ function drawMaze(){
 				if(showDistances)
 					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
 			}else{
-				context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
+				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
 			
 			if(gameLevel==1){
