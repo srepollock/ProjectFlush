@@ -41,8 +41,13 @@ var fingerGraphic = new Image();
 fingerGraphic.src="./pics/finger.png";
 var toiletGraphic = new Image();
 toiletGraphic.src="./pics/toilet.png";
+var instructionGraphic = new Image();
+instructionGraphic.src="./pics/instructions.png";
+var darkSquareGraphic = new Image();
+darkSquareGraphic.src="./pics/darkSquare.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
+var fingerGraphicDown = false;
 var solutionVisible = true;
 var limitedSight = true;
 var showDistances = false;
@@ -168,18 +173,28 @@ function drawMaze(){
 				if(showDistances)
 					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
 			}else{
-				context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
+				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
-			if(controlVisualVisible){
+			
+			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
-				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
-				if(timeLeft%2==0){
+				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));			
+				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
+				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-20-downArrowGraphic.height);
+			}			
+			if(controlVisualVisible){
+				context.font = "17px Arial";
+				context.fillText("Memorize the path to the toilet", offsetx-32, offsety-12);
+				context.fillText("Then retrace the path as fast as you can!", offsetx-72, offsety+width*imgSize+16);
+				
+				if(fingerGraphicDown){/*Checking if the finger graphic is up or town*/
+
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
 				}else{
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2)-20);
 				}
-				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
-				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-20-downArrowGraphic.height);
+				
+
 			}
 		}
 	}
@@ -487,6 +502,7 @@ function checkForExit(){
 just a function for printing out info prior to the ui
 **/
 function testingOutput(){
+	context.font = "10px Arial";
 	var output = "Level: "+gameLevel+"  Score: "+score+"  Time: "+timeLeft;
 	context.fillText(output, 10, canvas.height-20);
 }
@@ -533,11 +549,14 @@ function onPath(){
 }
 
 function timerFunction(){
+	fingerGraphicDown=!fingerGraphicDown;/*moving the finger up or down*/
 	if(showMapPause>0)showMapPause--;
 	if(isGameScreen){
 	if(timeLeft>0){
-	timeLeft--;
-	if(bonusTimer>0)bonusTimer--;
+	if(!controlVisualVisible){
+		timeLeft--;
+		if(bonusTimer>0)bonusTimer--;
+	}
 	drawMaze();
 	}else if (!isGameOver){
 		gameOverSound.play();
