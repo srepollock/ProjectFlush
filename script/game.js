@@ -43,6 +43,10 @@ var toiletGraphic = new Image();
 toiletGraphic.src="./pics/toilet.png";
 var darkSquareGraphic = new Image();
 darkSquareGraphic.src="./pics/darkSquare.png";
+var menuScreenGraphic = new Image();
+menuScreenGraphic.src="./pics/pic2.png";
+var playButtonGraphic = new Image();
+playButtonGraphic.src="./pics/PlayButton.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var fingerGraphicDown = false;
@@ -82,6 +86,9 @@ var isInstructionScreen = false;
 var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
+
+context.drawImage(menuScreenGraphic, 0, 0);
+context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 
 /*Initializes a new game.*/
 function startGame(){
@@ -368,6 +375,7 @@ function solutionVisibility(){
 }
 
 function doMouseDown(event){
+	if(!isMenuScreen){
 	controlVisualVisible=false;
 	if(!isGameOver&&showMapPause==0){
 	var x = event.pageX-canvas.offsetLeft;
@@ -388,6 +396,10 @@ function doMouseDown(event){
 	} else if(y<SCREENHEIGHT/2){
 		moveUp();
 	}
+	}
+	}else{
+		startGame();
+		isMenuScreen = false;
 	}
 }
 
