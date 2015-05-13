@@ -15,6 +15,8 @@
 <div class="jumbotron">
 <h1>Rush To Flush</h1>
 </div>
+<center><a class="btn btn-primary" href="index.html">Home</a></center>
+<br />
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4 text-center" id="score">
