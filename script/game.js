@@ -41,13 +41,12 @@ var fingerGraphic = new Image();
 fingerGraphic.src="./pics/finger.png";
 var toiletGraphic = new Image();
 toiletGraphic.src="./pics/toilet.png";
-var instructionGraphic = new Image();
-instructionGraphic.src="./pics/instructions.png";
 var darkSquareGraphic = new Image();
 darkSquareGraphic.src="./pics/darkSquare.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 
 var fingerGraphicDown = false;
+
 var solutionVisible = true;
 var limitedSight = true;
 var showDistances = false;
@@ -188,13 +187,10 @@ function drawMaze(){
 				context.fillText("Then retrace the path as fast as you can!", offsetx-72, offsety+width*imgSize+16);
 				
 				if(fingerGraphicDown){/*Checking if the finger graphic is up or town*/
-
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
 				}else{
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2)-20);
 				}
-				
-
 			}
 		}
 	}
