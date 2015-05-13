@@ -15,8 +15,6 @@
 <div class="jumbotron">
 <h1>Rush To Flush</h1>
 </div>
-<center><a class="btn btn-primary" href="index.html">Home</a></center>
-<br />
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4 text-center" id="score">
@@ -28,10 +26,11 @@
     if(mysqli_connect_errno($conn)){
         echo "fail to connect DB: " . mysqli_connect_error();
     }
-    if(isset($_POST['name'])){
-        $name = $_POST['name'];
-        $score = $_POST['score'];
-        $level = $_POST['level'];
+
+    if(!empty($_GET['name'])){
+        $name = $_GET['name'];
+        $score = $_GET['score'];
+        $level = $_GET['level'];
 
         $query = "INSERT INTO Boards(name, score, level) VALUES('$name','$score','$level')";
         $result = $conn->query($query);
@@ -39,8 +38,9 @@
             //echo $conn->affected_rows. " are inserted";
         }
     }else
+        //echo "nothing get";
 
-       echo "<br><h2> score order</h2><br>";
+       echo "<br><br><h2> score order</h2><br>";
        $sql = "SELECT name, score, level FROM Boards ORDER BY score DESC";
        echo "<table width='300'><tr><td width='33%'><h3>name</h3></td>";
        echo "<td width='33%'><h3>score</h3></td>";

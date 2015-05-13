@@ -596,10 +596,6 @@ function sendphp() {
             req = new ActiveXObject("Microsoft.XMLHTTP");
         }
 
-
-        
-        var data = "?name=" + name + "&score=" + score + "&level=" + gameLevel;
-        req.open("GET", "./leader.php"+data ,true);
         req.onreadystatechange = function (e) {
             if (req.readyState == 4) {
             //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
@@ -607,10 +603,14 @@ function sendphp() {
             //    alert("Error loading page." + req.readyState);
             }
         }
-        var loc = "./leader.php" + data;
-        req.send();
         
-        location.href = loc;
+
+        req.open("POST", "leader.php" ,true);
+
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
+        
+        location.href = "./leader.php";
         
 
         nameInput = false; 
