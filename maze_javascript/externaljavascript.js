@@ -1,4 +1,4 @@
-var canvas = document.getElementById("canGame");
+var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 canvas.addEventListener("mousedown", doMouseDown, true);
 
