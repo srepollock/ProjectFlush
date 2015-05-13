@@ -87,6 +87,7 @@ var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
 
+var nameInput = false;
 function pageLoaded(){
 context.drawImage(menuScreenGraphic, 0, 0);
 context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
@@ -572,6 +573,8 @@ function timerFunction(){
 		gameOverSound.play();
 		isGameOver=true;
 		drawGameOver();
+		nameInput = true;
+		sendphp();
 	}
 	}
 }
@@ -581,3 +584,37 @@ function drawGameOver(){
 	context.drawImage(gameOverGraphic, (canvas.width/2)-82, (canvas.width/2)-154);
 	testingOutput();
 }
+
+
+function sendphp() {
+    if (nameInput) {
+        var name = prompt("Enter your name:", "Player");
+        var req;
+        if(window.XMLHttpRequest){
+            req = new XMLHttpRequest();
+        }else{
+            req = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+
+        
+        var data = "?name=" + name + "&score=" + score + "&level=" + gameLevel;
+        req.open("GET", "./leader.php"+data ,true);
+        req.onreadystatechange = function (e) {
+            if (req.readyState == 4) {
+            //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
+            } else {
+            //    alert("Error loading page." + req.readyState);
+            }
+        }
+        var loc = "./leader.php" + data;
+        req.send();
+        
+        location.href = loc;
+        
+
+        nameInput = false; 
+    }
+
+}
+
