@@ -17,4 +17,4 @@ Group 15
 
 Working Version 1.3
 
-The games graphics have been updated on the game screen. By the end of this week we hope to have the leaderboards completed as well as getting the entire game onto one webpage.
+The games graphics have been updated on the game screen. By the end of this week we hope to have the leaderboards completed as well as getting the entire game onto one webpage.zz

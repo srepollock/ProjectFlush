@@ -5,18 +5,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" href="./style/style.css" type="text/css" />
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .jumbotron {
+            background: #FFFFD4;
+        }
+    </style>
 </head>
 <body>
-<div class="row">
-  <div class="col-md-4"></div>
-  <div class="col-md-4">
-     <div id="wrapper">
-        <h1>Rush To Flush</h1>
-      <div id="bar"><a class="btn btn-primary" href="index.html">Home</a> <a class="btn btn-info" href="about.html">About the Team</a></div>
-      </br>
-    </div>
-  </div>
-  <div class="col-md-4"></div>
+<div class="jumbotron">
+<h1>Rush To Flush</h1>
 </div>
 <div class="row">
   <div class="col-md-4"></div>
