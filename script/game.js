@@ -1,4 +1,4 @@
-$(document).dblclick(function (e){
+$('body').dblclick(function (e){
 	e.preventDefault();
 });
 
