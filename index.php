@@ -11,7 +11,7 @@
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <style>
-        .jumbotron {
+        #top {
             background: #FFFFD4;
         }
         #canGame {
@@ -20,9 +20,11 @@
     </style>
 </head>
 <body onload="pageLoaded()">
-    <div class="jumbotron text-center">
-        <h1>Rush To Flush</h1>
-    </div>
+	<div "row">
+	    <div class="col-lg-12 text-center" id="top">
+	        <h1>Rush To Flush</h1>
+	    </div>
+	</div>
     <center>
       <canvas id="canGame" width="310px" height="400px"></canvas>
       <script src="./script/game.js" type="text/javascript"></script>

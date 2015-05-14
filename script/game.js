@@ -624,6 +624,10 @@ function sendphp() {
 
 }
 
+/*
+This code fixed the double tap function on mobile devices
+src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices
+*/
 (function($) {
   $.fn.nodoubletapzoom = function() {
       $(this).bind('touchstart', function preventZoom(e) {
