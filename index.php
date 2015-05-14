@@ -52,18 +52,16 @@
 
 
            echo "<h2> [score order]</h2>";
-           $sql = "SELECT name, score, level FROM Score ORDER BY score DESC";
-           echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
-           echo "<th width='35%'><h3>SCORE</h3></td>";
-           echo "<td width='25%'><h3>LV</h3></td></thead>";
-      
+           $sql = "SELECT name, score FROM Score ORDER BY score DESC";
+           echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
+           echo "<td width='35%'><h3>SCORE</h3></td></thead>";
+       
            $result = $conn->query($sql);
             if($result->num_rows >0){
                 $count = 0;
                 while(($row = $result->fetch_assoc())&& $count<10){
-                    echo "<tr><td>".$row['name']."</td>";
-                    echo "<td>".$row['score']."</td>";
-                    echo "<td>".$row['level']."</td></tr>";
+                    echo "<tr><td width='65%'>".$row['name']."</td>";
+                    echo "<td width='35%'>".$row['score']."</td></tr>";
                     $count++;
                 }
             } else
@@ -72,10 +70,9 @@
              echo "</table>";
 
             echo "<br><h2> [level order]</h2>";
-            $sql = "SELECT name, score, level FROM Score ORDER BY level DESC, score DESC";
-            echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
-            echo "<td width='35%'><h3>SCORE</h3></td>";
-            echo "<td width='25%'><h3>LV</h3></td></thead>";
+            $sql = "SELECT name, level FROM Score ORDER BY level DESC, score DESC";
+            echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
+            echo "<td width='35%'><h3>LV</h3></td></thead>";
 
 
   
@@ -83,9 +80,8 @@
             if($result->num_rows > 0){
                 $count = 0;
                 while(($row = $result->fetch_assoc()) && $count <10){
-                    echo "<tr><td>".$row['name']."</td>";
-                    echo "<td>".$row['score']."</td>";
-                    echo "<td>".$row['level']."</td></tr>";
+                    echo "<tr><td width='65%'>".$row['name']."</td>";
+                    echo "<td width='35%'>".$row['level']."</td></tr>";
                     $count++;
                 }
             } else
