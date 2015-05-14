@@ -37,13 +37,13 @@
         $score = $_POST['score'];
         $level = $_POST['level'];
 
-        $query = "INSERT INTO Boards(name, score, level) VALUES('$name','$score','$level')";
+        $query = "INSERT INTO Score(name, score, level) VALUES('$name','$score','$level')";
        $conn->query($query);
 
     }else
 
        echo "<h2> [score order]</h2>";
-       $sql = "SELECT name, score, level FROM Boards ORDER BY score DESC";
+       $sql = "SELECT name, score, level FROM Score ORDER BY score DESC";
        echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
        echo "<th width='35%'><h3>SCORE</h3></td>";
        echo "<td width='25%'><h3>LV</h3></td></thead>";
@@ -63,7 +63,7 @@
          echo "</table>";
 
         echo "<br><h2> [level order]</h2>";
-        $sql = "SELECT name, score, level FROM Boards ORDER BY level DESC";
+        $sql = "SELECT name, score, level FROM Score ORDER BY level DESC";
         echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
         echo "<td width='35%'><h3>SCORE</h3></td>";
         echo "<td width='25%'><h3>LV</h3></td></thead>";
