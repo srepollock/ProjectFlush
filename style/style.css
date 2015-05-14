@@ -67,3 +67,9 @@ div #about {
 #canGame {
     border: 1px solid black;
 }
+
+thead{
+    border-bottom: 5px double black;
+    font-size:  medium;
+    color:  #c5cdd0;
+}

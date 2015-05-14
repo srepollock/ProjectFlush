@@ -77,7 +77,7 @@ var score = 0;
 
 var timerVar=setInterval(function(){timerFunction()},1000);
 var timeLeft = 0;
-var startingGameTime = 180;
+var startingGameTime = 15;
 var bonusTimer = 100;
 var showMapPause =0;
 
@@ -589,30 +589,32 @@ function drawGameOver(){
 function sendphp() {
     if (nameInput) {
         var name = prompt("Enter your name:", "Player");
-        var req;
-        if(window.XMLHttpRequest){
-            req = new XMLHttpRequest();
-        }else{
-            req = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-
-        req.onreadystatechange = function (e) {
-            if (req.readyState == 4) {
-            //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
-            } else {
-            //    alert("Error loading page." + req.readyState);
+        if(name != null){
+            var req;
+            if(window.XMLHttpRequest){
+                req = new XMLHttpRequest();
+            }else{
+                req = new ActiveXObject("Microsoft.XMLHTTP");
             }
+
+            req.onreadystatechange = function (e) {
+                if (req.readyState == 4) {
+                //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
+                } else {
+                //    alert("Error loading page." + req.readyState);
+                }
+            }
+        
+
+            req.open("POST", "leader.php" ,true);
+
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
+
+            
+        
         }
-        
-
-        req.open("POST", "leader.php" ,true);
-
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
-        
-        location.href = "./leader.php";
-        
-
+        setTimeout(function () { location.href = "./leader.php"; }, 500);
         nameInput = false; 
     }
 

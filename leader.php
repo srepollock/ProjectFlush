@@ -15,8 +15,6 @@
 <div class="jumbotron">
 <h1>Rush To Flush</h1>
 </div>
-<center><a class="btn btn-primary" href="index.html">Home</a></center>
-<br />
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4 text-center" id="score">
@@ -28,23 +26,23 @@
     if(mysqli_connect_errno($conn)){
         echo "fail to connect DB: " . mysqli_connect_error();
     }
+
     if(isset($_POST['name'])){
+        echo "isset working";
         $name = $_POST['name'];
         $score = $_POST['score'];
         $level = $_POST['level'];
 
         $query = "INSERT INTO Boards(name, score, level) VALUES('$name','$score','$level')";
-        $result = $conn->query($query);
-        if($result){
-            //echo $conn->affected_rows. " are inserted";
-        }
+       $conn->query($query);
+
     }else
 
-       echo "<br><h2> score order</h2><br>";
+       echo "<h2> [score order]</h2>";
        $sql = "SELECT name, score, level FROM Boards ORDER BY score DESC";
-       echo "<table width='300'><tr><td width='33%'><h3>name</h3></td>";
-       echo "<td width='33%'><h3>score</h3></td>";
-       echo "<td width='33%'><h3>level</h3></td></tr>";
+       echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
+       echo "<th width='35%'><h3>SCORE</h3></td>";
+       echo "<td width='25%'><h3>LV</h3></td></thead>";
       
        $result = $conn->query($sql);
         if($result->num_rows >0){
@@ -60,11 +58,11 @@
 
          echo "</table>";
 
-        echo "<br><br><br><h2> level order</h2><br>";
+        echo "<br><h2> [level order]</h2>";
         $sql = "SELECT name, score, level FROM Boards ORDER BY level DESC";
-        echo "<table width='300'><tr><td width='33%'><h3>name</h3></td>";
-        echo "<td width='33%'><h3>score</h3></td>";
-        echo "<td width='33%'><h3>level</h3></td></tr>";
+        echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
+        echo "<td width='35%'><h3>SCORE</h3></td>";
+        echo "<td width='25%'><h3>LV</h3></td></thead>";
 
 
   
