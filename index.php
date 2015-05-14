@@ -72,7 +72,7 @@
              echo "</table>";
 
             echo "<br><h2> [level order]</h2>";
-            $sql = "SELECT name, score, level FROM Score ORDER BY level DESC";
+            $sql = "SELECT name, score, level FROM Score ORDER BY level DESC, score DESC";
             echo "<table width='100%'><thead><td width='40%'><h3>NAME</h3></td>";
             echo "<td width='35%'><h3>SCORE</h3></td>";
             echo "<td width='25%'><h3>LV</h3></td></thead>";
