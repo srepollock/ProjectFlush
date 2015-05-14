@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="style/style.css" type="text/css" />
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="http://repo.zebkit.org/latest/zebra.min.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <style>
         .jumbotron {
