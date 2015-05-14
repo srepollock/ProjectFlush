@@ -16,6 +16,10 @@
 <h1>Rush To Flush</h1>
 </div>
 <div class="row">
+	<div class="col-md-12 text-center"><a class="btn btn-info" href="index.php">Home</a></div>
+</div>
+
+<div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4 text-center" id="score">
     <h2>LeaderBoards</h2>
