@@ -93,8 +93,8 @@ var controlVisualVisible = true;
 
 var nameInput = false;
 function pageLoaded(){
-context.drawImage(menuScreenGraphic, 0, 0);
-context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
+	context.drawImage(menuScreenGraphic, 0, 0);
+	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
 
 /*Initializes a new game.*/
@@ -502,6 +502,9 @@ function checkForExit(){
 		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
 			width+=2;
 			height+=2;
+			if(canvas.width-(imgSize*width)<70){
+				imgSize = (canvas.width-70)/width;
+			}
 		}
 		showMapPause = 2;
 		drawGraphics();
@@ -556,6 +559,7 @@ function randomizeExit(){
 				break;
 		}
 	}
+	randomizeExit();
 	}
 }
 
