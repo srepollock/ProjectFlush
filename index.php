@@ -51,46 +51,44 @@
         }
 
 
-           echo "<h2> [score order]</h2>";
-           $sql = "SELECT name, score FROM Score ORDER BY score DESC";
-           echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
-           echo "<td width='35%'><h3>SCORE</h3></td></thead>";
+        echo "<h2> [score order]</h2>";
+        $sql = "SELECT name, score FROM Score ORDER BY score DESC";
+        
        
-           $result = $conn->query($sql);
-            if($result->num_rows >0){
-                $count = 0;
-                while(($row = $result->fetch_assoc())&& $count<10){
-                    echo "<tr><td width='65%'>".$row['name']."</td>";
-                    echo "<td width='35%'>".$row['score']."</td></tr>";
-                    $count++;
-                }
-            } else
-               echo "0 results";
+        $result = $conn->query($sql);
+        if($result->num_rows >0){
+            $count = 0;
+			echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
+			echo "<td width='35%'><h3>SCORE</h3></td></thead>";
+            while(($row = $result->fetch_assoc())&& $count<10){
+                echo "<tr><td width='65%'>".$row['name']."</td>";
+                echo "<td width='35%'>".$row['score']."</td></tr>";
+                $count++;
+            }
+        } else
+			echo "NOTHING ON THE BOARD";
 
-             echo "</table>";
+        echo "</table>";
 
-            echo "<br><h2> [level order]</h2>";
-            $sql = "SELECT name, level FROM Score ORDER BY level DESC, score DESC";
-            echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
-            echo "<td width='35%'><h3>LV</h3></td></thead>";
+        echo "<br><h2> [level order]</h2>";
+        $sql = "SELECT name, level FROM Score ORDER BY level DESC, score DESC";
 
+        $result = $conn->query($sql);
+        if($result->num_rows > 0){
+			
+			echo "<table width='100%'><thead><td width='65%'><h3>NAME</h3></td>";
+			echo "<td width='35%'><h3>LV</h3></td></thead>";
+            $count = 0;
+            while(($row = $result->fetch_assoc()) && $count <10){
+                echo "<tr><td width='65%'>".$row['name']."</td>";
+                echo "<td width='35%'>".$row['level']."</td></tr>";
+                $count++;
+            }
+        } else
+           echo "NOTHING ON THE BOARD";
 
-  
-            $result = $conn->query($sql);
-            if($result->num_rows > 0){
-                $count = 0;
-                while(($row = $result->fetch_assoc()) && $count <10){
-                    echo "<tr><td width='65%'>".$row['name']."</td>";
-                    echo "<td width='35%'>".$row['level']."</td></tr>";
-                    $count++;
-                }
-            } else
-               echo "0 results";
-
-            echo "</table>";
-  
-
-
+        echo "</table>";
+		
         $conn->close();
     ?>
   </div>
