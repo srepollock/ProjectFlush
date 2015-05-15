@@ -193,7 +193,7 @@ function drawMaze(){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
 				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));			
 				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
-				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-20-downArrowGraphic.height);
+				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-40-downArrowGraphic.height);
 			}			
 			if(controlVisualVisible){
 				context.font = "17px Arial";
@@ -520,7 +520,7 @@ function checkForExit(){
 just a function for printing out info prior to the ui
 **/
 function testingOutput(){
-	context.font = "10px Arial";
+	context.font = "17px Arial";
 	var output = "Level: "+gameLevel+"  Score: "+score+"  Time: "+timeLeft;
 	context.fillText(output, 10, canvas.height-20);
 }
