@@ -102,8 +102,12 @@ var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
 
+//Which browser the user is using
+var userBrowser = "Unknown";
+
 var nameInput = false;
 function pageLoaded(){
+	checkBrowser();
 	context.drawImage(menuScreenGraphic, 0, 0);
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
@@ -427,7 +431,7 @@ Movement functions.  Pretty self explanatory.
 function moveDown(){
 	if(map[playerPositionx][playerPositiony+1]!='.'){
 		if(map[playerPositionx][playerPositiony+1]=='P'){
-			moveSound.currentTime=0;
+			if(userBrowser!="Unknown")moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -447,7 +451,7 @@ function moveDown(){
 function moveUp(){
 	if(map[playerPositionx][playerPositiony-1]!='.'){
 		if(map[playerPositionx][playerPositiony-1]=='P'){
-			moveSound.currentTime=0;
+			if(userBrowser!="Unknown")moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -467,7 +471,7 @@ function moveUp(){
 function moveRight(){
 	if(map[playerPositionx+1][playerPositiony]!='.'){
 		if(map[playerPositionx+1][playerPositiony]=='P'){
-			moveSound.currentTime=0;
+			if(userBrowser!="Unknown")moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -487,7 +491,7 @@ function moveRight(){
 function moveLeft(){
 	if(map[playerPositionx-1][playerPositiony]!='.'){
 		if(map[playerPositionx-1][playerPositiony]=='P'){
-			moveSound.currentTime=0;
+			if(userBrowser!="Unknown")moveSound.currentTime=0;
 			moveSound.play();
 		}else{
 			badMoveSound.play();
@@ -661,3 +665,11 @@ src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-i
       });
   };
 })(jQuery);
+
+
+function checkBrowser(){
+	var browserInfo = navigator.userAgent;
+	if(browserInfo.indexOf("Firefox")!=-1)userBrowser="Firefox";
+	if(browserInfo.indexOf("Chrome")!=-1)userBrowser="Chrome";
+	if(browserInfo.indexOf("Safari")!=-1)userBrowser="Safari";
+}
