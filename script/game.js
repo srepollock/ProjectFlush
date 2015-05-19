@@ -604,7 +604,9 @@ function drawGameOver(){
 	testingOutput();
 }
 
-
+/*
+	Sends the score to the database for the leaderboard.
+*/
 function sendphp() {
     if (nameInput) {
         var name = prompt("Enter your name:", "Player");

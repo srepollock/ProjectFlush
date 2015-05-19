@@ -1,3 +1,7 @@
+<?
+  session_start();
+  $_SESSION['seshNo']="ProjectFlush";
+?>
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
