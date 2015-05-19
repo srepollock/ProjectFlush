@@ -1,7 +1,20 @@
+// $('body').dblclick(function (e){
+// 	e.preventDefault();
+// });
+
+/*
+	Canvas to draw the game on.
+*/
 var canvas = document.getElementById("canGame");
 var context = canvas.getContext("2d");
+/*
+	Sets the canvas to listen to the mouse button clicks.
+*/
 canvas.addEventListener("mousedown", doMouseDown, true);
 
+/*
+	Creates sound files for use.
+*/
 var moveSound = new Audio();
 moveSound.src = "./sound/move.wav";
 var badMoveSound = new Audio();
@@ -13,12 +26,24 @@ gameOverSound.src = "./sound/gameOverSound.wav";
 var wallSound = new Audio();
 wallSound.src = "./sound/wall.wav";
 
+/*
+	Sets screen width
+*/
 var SCREENWIDTH = canvas.width;
 var SCREENHEIGHT = canvas.height;
 
-var map;/*Array that the maze is kept within*/
-var distanceMap;/*A map of all move distances from the starting point*/
+/*
+	Array that the maze is kept within
+*/
+var map;
+/*
+	A map of all move distances from the starting point
+*/
+var distanceMap;
 
+/*
+	Sets up the images for the game.
+*/
 var wall = new Image();
 wall.src="./pics/wall.png";
 var floor = new Image();
@@ -48,11 +73,19 @@ menuScreenGraphic.src="./pics/pic2.png";
 var playButtonGraphic = new Image();
 playButtonGraphic.src="./pics/PlayButton.png";
 var imgSize = 16;/*pixel width and height of tiles*/
-
 var fingerGraphicDown = false;
 
+/*
+	Displays the solution at the beginning of the game.
+*/
 var solutionVisible = true;
+/*
+	3x3 Grid for the character to see the grid from.
+*/
 var limitedSight = true;
+/*
+	Shows how many steps are to the solution.
+*/
 var showDistances = false;
 
 var initialWidth = 10;
@@ -87,9 +120,10 @@ var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
 
+var nameInput = false;
 function pageLoaded(){
-context.drawImage(menuScreenGraphic, 0, 0);
-context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
+	context.drawImage(menuScreenGraphic, 0, 0);
+	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
 
 /*Initializes a new game.*/
@@ -188,7 +222,7 @@ function drawMaze(){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
 				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));			
 				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
-				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-20-downArrowGraphic.height);
+				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-40-downArrowGraphic.height);
 			}			
 			if(controlVisualVisible){
 				context.font = "17px Arial";
@@ -497,6 +531,9 @@ function checkForExit(){
 		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
 			width+=2;
 			height+=2;
+			if(canvas.width-(imgSize*width)<70){
+				imgSize = (canvas.width-70)/width;
+			}
 		}
 		showMapPause = 2;
 		drawGraphics();
@@ -512,7 +549,7 @@ function checkForExit(){
 just a function for printing out info prior to the ui
 **/
 function testingOutput(){
-	context.font = "10px Arial";
+	context.font = "17px Arial";
 	var output = "Level: "+gameLevel+"  Score: "+score+"  Time: "+timeLeft;
 	context.fillText(output, 10, canvas.height-20);
 }
@@ -551,6 +588,7 @@ function randomizeExit(){
 				break;
 		}
 	}
+	randomizeExit();
 	}
 }
 
@@ -572,6 +610,8 @@ function timerFunction(){
 		gameOverSound.play();
 		isGameOver=true;
 		drawGameOver();
+		nameInput = true;
+		sendphp();
 	}
 	}
 }
@@ -581,3 +621,61 @@ function drawGameOver(){
 	context.drawImage(gameOverGraphic, (canvas.width/2)-82, (canvas.width/2)-154);
 	testingOutput();
 }
+
+/*
+	Sends the score to the database for the leaderboard.
+*/
+function sendphp() {
+    if (nameInput) {
+        var name = prompt("Enter your name:", "Player");
+        if(name != null){
+            var req;
+            if(window.XMLHttpRequest){
+                req = new XMLHttpRequest();
+            }else{
+                req = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            req.onreadystatechange = function (e) {
+                if (req.readyState == 4) {
+                //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
+                } else {
+                //    alert("Error loading page." + req.readyState);
+                }
+            }
+        
+
+            req.open("POST", "leader.php" ,true);
+
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
+
+            
+        
+        }
+        setTimeout(function () { location.href = "./leader.php"; }, 500);
+        nameInput = false; 
+    }
+
+}
+
+/*
+This code fixed the double tap function on mobile devices
+src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices
+*/
+(function($) {
+  $.fn.nodoubletapzoom = function() {
+      $(this).bind('touchstart', function preventZoom(e) {
+        var t2 = e.timeStamp
+          , t1 = $(this).data('lastTouch') || t2
+          , dt = t2 - t1
+          , fingers = e.originalEvent.touches.length;
+        $(this).data('lastTouch', t2);
+        if (!dt || dt > 500 || fingers > 1) return; // not double-tap
+
+        e.preventDefault(); // double tap - prevent the zoom
+        // also synthesize click events we just swallowed up
+        $(this).trigger('click').trigger('click');
+      });
+  };
+})(jQuery);
