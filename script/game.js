@@ -2,10 +2,19 @@
 // 	e.preventDefault();
 // });
 
+/*
+	Canvas to draw the game on.
+*/
 var canvas = document.getElementById("canGame");
 var context = canvas.getContext("2d");
+/*
+	Sets the canvas to listen to the mouse button clicks.
+*/
 canvas.addEventListener("mousedown", doMouseDown, true);
 
+/*
+	Creates sound files for use.
+*/
 var moveSound = new Audio();
 moveSound.src = "./sound/move.wav";
 var badMoveSound = new Audio();
@@ -17,12 +26,24 @@ gameOverSound.src = "./sound/gameOverSound.wav";
 var wallSound = new Audio();
 wallSound.src = "./sound/wall.wav";
 
+/*
+	Sets screen width
+*/
 var SCREENWIDTH = canvas.width;
 var SCREENHEIGHT = canvas.height;
 
-var map;/*Array that the maze is kept within*/
-var distanceMap;/*A map of all move distances from the starting point*/
+/*
+	Array that the maze is kept within
+*/
+var map;
+/*
+	A map of all move distances from the starting point
+*/
+var distanceMap;
 
+/*
+	Sets up the images for the game.
+*/
 var wall = new Image();
 wall.src="./pics/wall.png";
 var floor = new Image();
@@ -52,11 +73,19 @@ menuScreenGraphic.src="./pics/pic2.png";
 var playButtonGraphic = new Image();
 playButtonGraphic.src="./pics/PlayButton.png";
 var imgSize = 16;/*pixel width and height of tiles*/
-
 var fingerGraphicDown = false;
 
+/*
+	Displays the solution at the beginning of the game.
+*/
 var solutionVisible = true;
+/*
+	3x3 Grid for the character to see the grid from.
+*/
 var limitedSight = true;
+/*
+	Shows how many steps are to the solution.
+*/
 var showDistances = false;
 
 var initialWidth = 10;
