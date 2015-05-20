@@ -9,6 +9,7 @@ var canvas = document.getElementById("canGame");
 var context = canvas.getContext("2d");
 //Sets the canvas to listen to the mouse button clicks.
 canvas.addEventListener("mousedown", doMouseDown, true);
+document.onkeydown = doKeyDown;
 
 //Creates sound files for use.
 var moveSound = new Audio();
@@ -115,10 +116,24 @@ var userBrowser = "Unknown";
 //achievements
 var firstLevelAchievement = false;
 
+//Codes for keys to be ignored by page navigation.
+var movementKeyArray=new Array(33,34,35,36,37,38,39,40);
+
+
 var nameInput = false;
 function pageLoaded(){
 	checkBrowser();
 	loadCookie();
+	
+	//Tells the page to not scroll on keys used for movement in game
+	$(document).keydown(function(e) {
+		var key = e.which;
+		if($.inArray(key,movementKeyArray) > -1) {
+			e.preventDefault();
+			return false;
+		}
+		return true;
+	});
 	context.drawImage(menuScreenGraphic, 0, 0);
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
@@ -738,7 +753,7 @@ function saveCookie(){
 }
 
 /*
-
+Checks if the first level achievement has been acquired yet, and if not sets it true and saves cookie. 
 */
 function checkFirstLevelAchievement(){
 	if(firstLevelAchievement!=true){
@@ -748,4 +763,35 @@ function checkFirstLevelAchievement(){
 	}
 }
 
+/*
+Function for handling keyboard movement.
+*/
+function doKeyDown(event){
+	
+	if(!isMenuScreen){
+	controlVisualVisible=false;
+	if(!isGameOver&&showMapPause==0){
+	
+	
+	if(solutionVisible)solutionVisibility();
 
+	event = event || window.event;
+	
+	 if (event.keyCode == '38') {
+        moveUp();
+    }
+    else if (event.keyCode == '40') {
+		moveDown();
+    }
+    else if (event.keyCode == '37') {
+       moveLeft();
+    }
+    else if (event.keyCode == '39') {
+       moveRight();
+    }
+	}
+	}else{
+		startGame();
+		isMenuScreen = false;
+	}
+}
