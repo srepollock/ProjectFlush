@@ -60,8 +60,15 @@ var menuScreenGraphic = new Image();
 menuScreenGraphic.src="./pics/pic2.png";
 var playButtonGraphic = new Image();
 playButtonGraphic.src="./pics/PlayButton.png";
+var hintButtonGraphic = new Image();
+hintButtonGraphic.src="./pics/hintButton.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
+
+//coordinates of hint button
+var hintButtonX = canvas.width*0.82;
+var hintButtonY = canvas.height*0.90;
+var hintCost = 30;
 
 //Displays the solution at the beginning of the game.
 var solutionVisible = true;
@@ -203,6 +210,8 @@ function drawMaze(){
 			}else{
 				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
+			
+			context.drawImage(hintButtonGraphic, hintButtonX, hintButtonY);
 			
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
@@ -396,15 +405,35 @@ function solutionVisibility(){
 	drawMaze();
 }
 
+/**
+Function for handling mouse events.
+
+**/
 function doMouseDown(event){
-	if(!isMenuScreen){
-	controlVisualVisible=false;
-	if(!isGameOver&&showMapPause==0){
 	var x = event.pageX-canvas.offsetLeft;
 	var y = event.pageY-canvas.offsetTop;
 	
+	/*checking if the hint button was pressed*/
+	if(x>hintButtonX&&x<hintButtonX+hintButtonGraphic.width
+		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height){
+		if(!solutionVisible&&limitedSight){
+			solutionVisible=true;
+			limitedSight=false;
+			drawMaze();
+			/*minuses the hint cost from the time left.  sets it to 0 if it would be negative.*/
+			if(timeLeft-hintCost<0)timeLeft=0;
+			else timeLeft-=hintCost;
+		}
+		return;//if button is pressed, return so that it isn't registered as a movement click.
+	}
+	
+	if(!isMenuScreen){
+	controlVisualVisible=false;
+	if(!isGameOver&&showMapPause==0){
+	
+	
 	if(solutionVisible)solutionVisibility();
-
+	
 	if(x>SCREENWIDTH/2
 	&&y>(SCREENHEIGHT/2)-(x-(SCREENWIDTH/2))
 	&&y<(SCREENHEIGHT/2)+(x-(SCREENWIDTH/2))){
@@ -666,7 +695,9 @@ src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-i
   };
 })(jQuery);
 
-
+/*
+Checks which browser the user is using.  keeps as Unknown if it isn't one listed.
+*/
 function checkBrowser(){
 	var browserInfo = navigator.userAgent;
 	if(browserInfo.indexOf("Firefox")!=-1)userBrowser="Firefox";
