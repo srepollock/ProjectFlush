@@ -112,9 +112,13 @@ var controlVisualVisible = true;
 //Which browser the user is using
 var userBrowser = "Unknown";
 
+//achievements
+var firstLevelAchievement = false;
+
 var nameInput = false;
 function pageLoaded(){
 	checkBrowser();
+	loadCookie();
 	context.drawImage(menuScreenGraphic, 0, 0);
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
@@ -543,6 +547,7 @@ function checkForExit(){
 		levelComplete.play();
 		score+=100+bonusTimer;
 		gameLevel++;
+		checkFirstLevelAchievement();
 		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
 			width+=2;
 			height+=2;
@@ -704,3 +709,43 @@ function checkBrowser(){
 	if(browserInfo.indexOf("Chrome")!=-1)userBrowser="Chrome";
 	if(browserInfo.indexOf("Safari")!=-1)userBrowser="Safari";
 }
+
+/*
+Loads and extracts variables from stored cookie
+*/
+function loadCookie(){
+	var cookieString = document.cookie;
+	
+	if(cookieString==""){
+		//alert("Empty cookie");
+		saveCookie();
+	}
+	
+	//check if the cookie string contains firstLevelAchievement = true and set the current variable to true if true
+	if(cookieString.indexOf("firstLevelAchievement=true")!=-1){
+		firstLevelAchievement = true;
+		//alert("first level achievement loaded true.");
+	}
+}
+
+/*
+Saves achievements to the game cookie
+*/
+function saveCookie(){
+	var expiration = new Date();
+	expiration.setMinutes(expiration.getMinutes()+2);
+	document.cookie="firstLevelAchievement="+firstLevelAchievement+"; expires="+expiration.toGMTString();
+}
+
+/*
+
+*/
+function checkFirstLevelAchievement(){
+	if(firstLevelAchievement!=true){
+		firstLevelAchievement=true;
+		alert("First level achievement!");
+		saveCookie();
+	}
+}
+
+
