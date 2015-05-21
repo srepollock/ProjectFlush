@@ -63,12 +63,14 @@ var playButtonGraphic = new Image();
 playButtonGraphic.src="./pics/PlayButton.png";
 var hintButtonGraphic = new Image();
 hintButtonGraphic.src="./pics/hintButton.png";
+var lowerBackgroundGraphic = new Image();
+lowerBackgroundGraphic.src="./pics/lowerBackground.png";
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
 
 //coordinates of hint button
 var hintButtonX = canvas.width*0.82;
-var hintButtonY = canvas.height*0.90;
+var hintButtonY = canvas.height*0.91;
 var hintCost = 20;
 
 //Displays the solution at the beginning of the game.
@@ -232,7 +234,9 @@ function drawMaze(){
 				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
 			
-			context.drawImage(hintButtonGraphic, hintButtonX, hintButtonY);
+			context.drawImage(lowerBackgroundGraphic, 0, canvas.height-40, canvas.width, 40);
+			
+			context.drawImage(hintButtonGraphic, hintButtonX, hintButtonY, 50, 20);
 			
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
