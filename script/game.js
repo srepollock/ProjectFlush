@@ -70,7 +70,7 @@ var fingerGraphicDown = false;
 
 //coordinates of hint button
 var hintButtonX = canvas.width*0.82;
-var hintButtonY = canvas.height*0.91;
+var hintButtonY = canvas.height-30;
 var hintCost = 20;
 
 //Displays the solution at the beginning of the game.
@@ -138,7 +138,7 @@ function pageLoaded(){
 		}
 		return true;
 	});
-	context.drawImage(menuScreenGraphic, 0, 0);
+	context.drawImage(menuScreenGraphic, canvas.width/2-menuScreenGraphic.width/2, 0);
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
 
@@ -246,8 +246,8 @@ function drawMaze(){
 			}			
 			if(controlVisualVisible){
 				context.font = "17px Arial";
-				context.fillText("Memorize the path to the toilet", offsetx-32, offsety-12);
-				context.fillText("Then retrace the path as fast as you can!", offsetx-72, offsety+width*imgSize+16);
+				context.fillText("Memorize this path to the toilet", offsetx-32, offsety-12);
+				context.fillText("Then retrace it as fast as you can!", offsetx-50, offsety+width*imgSize+16);
 				
 				if(fingerGraphicDown){/*Checking if the finger graphic is up or town*/
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
