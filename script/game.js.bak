@@ -69,7 +69,7 @@ var fingerGraphicDown = false;
 //coordinates of hint button
 var hintButtonX = canvas.width*0.82;
 var hintButtonY = canvas.height*0.90;
-var hintCost = 20;
+var hintCost = 30;
 
 //Displays the solution at the beginning of the game.
 var solutionVisible = true;
@@ -115,8 +115,6 @@ var userBrowser = "Unknown";
 
 //achievements
 var firstLevelAchievement = false;
-var firstPlayAchievement = false;
-var firstHintAchievement = false;
 
 //Codes for keys to be ignored by page navigation.
 var movementKeyArray=new Array(33,34,35,36,37,38,39,40);
@@ -434,9 +432,6 @@ function doMouseDown(event){
 	var x = event.pageX-canvas.offsetLeft;
 	var y = event.pageY-canvas.offsetTop;
 	
-	
-	if(!isMenuScreen){
-	
 	/*checking if the hint button was pressed*/
 	if(x>hintButtonX&&x<hintButtonX+hintButtonGraphic.width
 		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height){
@@ -444,7 +439,6 @@ function doMouseDown(event){
 			solutionVisible=true;
 			limitedSight=false;
 			drawMaze();
-			if(firstHintAchievement==false)gainAchievement(2);
 			/*minuses the hint cost from the time left.  sets it to 0 if it would be negative.*/
 			if(timeLeft-hintCost<0)timeLeft=0;
 			else timeLeft-=hintCost;
@@ -452,7 +446,7 @@ function doMouseDown(event){
 		return;//if button is pressed, return so that it isn't registered as a movement click.
 	}
 	
-
+	if(!isMenuScreen){
 	controlVisualVisible=false;
 	if(!isGameOver&&showMapPause==0){
 	
@@ -476,7 +470,6 @@ function doMouseDown(event){
 	}else{
 		startGame();
 		isMenuScreen = false;
-		if(firstLevelAchievement==false)gainAchievement(1);
 	}
 }
 
@@ -568,12 +561,8 @@ function checkForExit(){
 	if(playerPositionx==targetx&&playerPositiony==targety){
 		levelComplete.play();
 		score+=100+bonusTimer;
-		
-		//Gives you achievement for beating first level if you dont already have it.
-		if(gameLevel==1&&firstLevelAchievement==false)gainAchievement(0);
-		
 		gameLevel++;
-
+		checkFirstLevelAchievement();
 		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
 			width+=2;
 			height+=2;
@@ -752,16 +741,6 @@ function loadCookie(){
 		firstLevelAchievement = true;
 		//alert("first level achievement loaded true.");
 	}
-	//check if the cookie string contains firstPlayAchievement = true and set the current variable to true if true
-	if(cookieString.indexOf("firstPlayAchievement=true")!=-1){
-		firstPlayAchievement = true;
-		//alert("first play achievement loaded true.");
-	}
-	//check if the cookie string contains firstHintAchievement = true and set the current variable to true if true
-	if(cookieString.indexOf("firstHintAchievement=true")!=-1){
-		firstHintAchievement = true;
-		//alert("first hint achievement loaded true.");
-	}
 }
 
 /*
@@ -771,32 +750,16 @@ function saveCookie(){
 	var expiration = new Date();
 	expiration.setMinutes(expiration.getMinutes()+2);
 	document.cookie="firstLevelAchievement="+firstLevelAchievement+"; expires="+expiration.toGMTString();
-	document.cookie="firstPlayAchievement="+firstPlayAchievement+"; expires="+expiration.toGMTString();
-	document.cookie="firstHintAchievement= "+firstHintAchievement+"; expires="+expiration.toGMTString();
 }
 
 /*
-Gain an achievement by number passed: 0=first level, 1=first play, 2=first use of hint button
+Checks if the first level achievement has been acquired yet, and if not sets it true and saves cookie. 
 */
-function gainAchievement(achievementNum){
-	switch(achievementNum){
-		case 0:
+function checkFirstLevelAchievement(){
+	if(firstLevelAchievement!=true){
 		firstLevelAchievement=true;
 		alert("First level achievement!");
 		saveCookie();
-		break;
-		
-		case 1:
-		firstPlayAchievement=true;
-		alert("First play achievement!");
-		saveCookie();
-		break;
-		
-		case 2:
-		firstHintAchievement=true;
-		alert("First hint achievement!");
-		saveCookie();
-		break;
 	}
 }
 
