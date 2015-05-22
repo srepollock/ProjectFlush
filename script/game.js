@@ -65,6 +65,9 @@ var hintButtonGraphic = new Image();
 hintButtonGraphic.src="./pics/hintButton.png";
 var lowerBackgroundGraphic = new Image();
 lowerBackgroundGraphic.src="./pics/lowerBackground.png";
+var speakerGraphic = new Image();
+speakerGraphic.src = "./pics/speaker.png";
+
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
 
@@ -72,6 +75,10 @@ var fingerGraphicDown = false;
 var hintButtonX = canvas.width*0.82;
 var hintButtonY = canvas.height-30;
 var hintCost = 20;
+
+var muteButtonX = canvas.width*0.90;
+var muteButtonY = 10;
+var isMuted = true;
 
 //Displays the solution at the beginning of the game.
 var solutionVisible = true;
@@ -94,20 +101,22 @@ var targety;/*Pathfinding target's y coordinate*/
 var startx=1;/*Starting point x coordinate*/
 var starty=1;/*Starting point y coordinate*/
 
+//Players x,y position on the tileMap
 var playerPositionx;
 var playerPositiony;
 
 var gameLevel = 1;
 var score = 0;
 
+//setting up game timing
 var timerVar=setInterval(function(){timerFunction()},1000);
 var timeLeft = 0;
 var startingGameTime = 180;
-var bonusTimer = 100;
-var showMapPause =0;
+var bonusTimer = 100;//bonus level completion points, decremented one per second
+var showMapPause =0;//pause timer at the beginning of each level so no accidental solution skips
 
+//Some boolean variables to determine which screen and where in the game the player is at
 var isMenuScreen = true;
-var isInstructionScreen = false;
 var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
@@ -148,7 +157,6 @@ function pageLoaded(){
 function startGame(){
 	isGameScreen = true;
 	isMenuScreen = false;
-	isInstructionScreen = false;
 	gameLevel=1;
 	score=0;
 	timeLeft=startingGameTime;
@@ -211,16 +219,24 @@ function doPathfinding(){
 Draws the current maze tiles to the canvas
 **/
 function drawMaze(){
+	//xy offsets so that the map is centered in the canvas
 	offsetx = (canvas.width/2)-(width*imgSize)/2;
 	offsety = (canvas.height/2)-(height*imgSize)/2;
-	context.fillStyle="#41ADFF";
-	context.fillRect( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
+	
+	//Drawing coloured background, and then setting draw colour back to black.
+	context.fillStyle="#D1FFF0";
+	context.fillRect( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/	
 	context.fillStyle="#000000";
+	
+	
 	for(var i=0; i<height; i++){
 		for(var j=0; j<width; j++){
+			
+			//If they can see the whole map, or the position is located directly next to the player.
 			if(!limitedSight||
 			(j>=playerPositionx-1&&j<=playerPositionx+1
 			&&i>=playerPositiony-1&&i<=playerPositiony+1)){
+				
 				if(map[j][i]=='.'){/*Wall*/
 					context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				} else if(map[j][i]=='P'&&solutionVisible){/*Path*/
@@ -228,19 +244,27 @@ function drawMaze(){
 				}else {/*Ground*/
 					context.drawImage(floor, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 				}
-				if(j==playerPositionx&&i==playerPositiony)
+				
+				if(j==playerPositionx&&i==playerPositiony)/*player*/
 					context.drawImage(character, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
-				if(j==targetx&&i==targety)
+					
+				if(j==targetx&&i==targety)/*toilet (maze end)*/
 					context.drawImage(toiletGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
-				if(showDistances)
+				
+				if(showDistances)/*showing movement distance from the player to this tile*/
 					context.fillText(distanceMap[j][i], offsetx+j*imgSize, offsety+(i+1)*imgSize);
+					
 			}else{
+				//if it isnt a tile the player can see, draw a black square.
 				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
 			
+			//Drawing lower background panel
 			context.drawImage(lowerBackgroundGraphic, 0, canvas.height-40, canvas.width, 40);
-			
+			//Drawing hint button
 			context.drawImage(hintButtonGraphic, hintButtonX, hintButtonY, 50, 20);
+			//Drawing mute button
+			context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
 			
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
@@ -445,20 +469,7 @@ function doMouseDown(event){
 	
 	if(!isMenuScreen){
 	
-	/*checking if the hint button was pressed*/
-	if(x>hintButtonX&&x<hintButtonX+hintButtonGraphic.width
-		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height){
-		if(!solutionVisible&&limitedSight){
-			solutionVisible=true;
-			limitedSight=false;
-			drawMaze();
-			if(firstHintAchievement==false)gainAchievement(2);
-			/*minuses the hint cost from the time left.  sets it to 0 if it would be negative.*/
-			if(timeLeft-hintCost<0)timeLeft=0;
-			else timeLeft-=hintCost;
-		}
-		return;//if button is pressed, return so that it isn't registered as a movement click.
-	}
+	if(buttonPressed(x,y))return;
 	
 
 	controlVisualVisible=false;
@@ -484,7 +495,7 @@ function doMouseDown(event){
 	}else{
 		startGame();
 		isMenuScreen = false;
-		if(firstLevelAchievement==false)gainAchievement(1);
+		if(firstPlayAchievement==false)gainAchievement(1);
 	}
 }
 
@@ -495,9 +506,9 @@ function moveDown(){
 	if(map[playerPositionx][playerPositiony+1]!='.'){
 		if(map[playerPositionx][playerPositiony+1]=='P'){
 			if(userBrowser!="Unknown")moveSound.currentTime=0;
-			moveSound.play();
+			if(!isMuted)moveSound.play();
 		}else{
-			badMoveSound.play();
+			if(!isMuted)badMoveSound.play();
 		}
 		playerPositiony++;
 		if(!onPath()){
@@ -506,7 +517,7 @@ function moveDown(){
 		}
 	}else{
 		wallSound.currentTime=0;
-		wallSound.play();
+		if(!isMuted)wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -515,9 +526,9 @@ function moveUp(){
 	if(map[playerPositionx][playerPositiony-1]!='.'){
 		if(map[playerPositionx][playerPositiony-1]=='P'){
 			if(userBrowser!="Unknown")moveSound.currentTime=0;
-			moveSound.play();
+			if(!isMuted)moveSound.play();
 		}else{
-			badMoveSound.play();
+			if(!isMuted)badMoveSound.play();
 		}
 		playerPositiony--;
 		if(!onPath()){
@@ -526,7 +537,7 @@ function moveUp(){
 		}
 	}else{
 		wallSound.currentTime=0;
-		wallSound.play();
+		if(!isMuted)wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -535,9 +546,9 @@ function moveRight(){
 	if(map[playerPositionx+1][playerPositiony]!='.'){
 		if(map[playerPositionx+1][playerPositiony]=='P'){
 			if(userBrowser!="Unknown")moveSound.currentTime=0;
-			moveSound.play();
+			if(!isMuted)moveSound.play();
 		}else{
-			badMoveSound.play();
+			if(!isMuted)badMoveSound.play();
 		}
 		playerPositionx++;
 		if(!onPath()){
@@ -546,7 +557,7 @@ function moveRight(){
 		}
 	}else{
 		wallSound.currentTime=0;
-		wallSound.play();
+		if(!isMuted)wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -555,9 +566,9 @@ function moveLeft(){
 	if(map[playerPositionx-1][playerPositiony]!='.'){
 		if(map[playerPositionx-1][playerPositiony]=='P'){
 			if(userBrowser!="Unknown")moveSound.currentTime=0;
-			moveSound.play();
+			if(!isMuted)moveSound.play();
 		}else{
-			badMoveSound.play();
+			if(!isMuted)badMoveSound.play();
 		}		
 		playerPositionx--;
 		if(!onPath()){
@@ -566,7 +577,7 @@ function moveLeft(){
 		}
 	}else{
 		wallSound.currentTime=0;
-		wallSound.play();
+		if(!isMuted)wallSound.play();
 	}
 	checkForExit()
 	drawMaze();
@@ -574,7 +585,7 @@ function moveLeft(){
 
 function checkForExit(){
 	if(playerPositionx==targetx&&playerPositiony==targety){
-		levelComplete.play();
+		if(!isMuted)levelComplete.play();
 		score+=100+bonusTimer;
 		
 		//Gives you achievement for beating first level if you dont already have it.
@@ -661,7 +672,7 @@ function timerFunction(){
 	}
 	drawMaze();
 	}else if (!isGameOver){
-		gameOverSound.play();
+		if(!isMuted)gameOverSound.play();
 		isGameOver=true;
 		drawGameOver();
 		nameInput = true;
@@ -839,4 +850,25 @@ function doKeyDown(event){
 		startGame();
 		isMenuScreen = false;
 	}
+}
+
+/*
+
+*/
+function buttonPressed(x,y){
+	/*checking if the hint button was pressed*/
+	if(x>hintButtonX&&x<hintButtonX+hintButtonGraphic.width
+		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height){
+		if(!solutionVisible&&limitedSight){
+			solutionVisible=true;
+			limitedSight=false;
+			drawMaze();
+			if(firstHintAchievement==false)gainAchievement(2);
+			/*minuses the hint cost from the time left.  sets it to 0 if it would be negative.*/
+			if(timeLeft-hintCost<0)timeLeft=0;
+			else timeLeft-=hintCost;
+		}
+		return true;//if button is pressed, return so that it isn't registered as a movement click.
+	}
+	
 }
