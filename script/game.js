@@ -790,7 +790,7 @@ function sendphp() {
             }
             req.open("POST", "leader.php" ,true);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send("na=" + name + "&sr=" + score + "&lv=" + gameLevel);
+            req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
         }
 		//time interval for updating database
         setTimeout(function () { location.href = "./leader.php"; }, 500);
