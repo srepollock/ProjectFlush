@@ -1,8 +1,34 @@
 # ProjectFlush
-This is our projects term game.
+--------------
 Built by 404: Team Not Found
+Group 15
+Aicha, Eunwon, Hai, Rob & Spencer
 
-View the working site through: "http://srepollock.github.io/ProjectFlush"
+Description:
+------------
+Rush to Flush is a memory/speed game to test your short term memeory retention. This game progressively gets more challenging as you continue. Beat as manly levels as you can in 3 minutes and beat your highscore!
+
+Code Structure:
+---------------
+This code is separated into different files. We have all JavaScript files in a script folder, as well as CSS in a style folder. This is to separate the code and make everything easier to understand. The pictures are all  under a pictures folder, and keep everything out of the way there. With the html/php code, all of that is in the root folder, and kept at the front for access and for website hosting.
+
+Technologies Used:
+------------------
+HTML/CSS
+JavaScript
+PHP/SQL
+AJAX
+jQuery
+Bootstrap
+
+Issues/Problems Encountered:
+----------------------------
+Using new languages (JS, PHP)
+GitHub
+Overlapping audio during game
+Touch screen double-tapping reactions on mobile
+Database hacking
+Getting the game to work across all major browsers (main problems with Internet Explorer).
 
 -------------
 
