@@ -130,7 +130,7 @@ var score = 0;
 //setting up game timing
 var timerVar=setInterval(function(){timerFunction()},1000);
 var timeLeft = 0;
-var startingGameTime = 18;
+var startingGameTime = 180;
 var bonusTimer = 100;//bonus level completion points, decremented one per second
 var showMapPause =0;//pause timer at the beginning of each level so no accidental solution skips
 
@@ -678,7 +678,7 @@ function checkForExit(){
 				imgSize = (canvas.width-70)/width;
 			}
 		}
-		showMapPause = 2;
+		showMapPause = 1;
 		drawGraphics();
 		generateMap();
 		randomizeExit();
