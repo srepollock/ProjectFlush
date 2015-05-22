@@ -56,7 +56,7 @@
 
 		<div class="tab-content">
 			<div id="d_score" class="tab-pane fade in active">
-			<h3>Daily Score Rank</h3>
+			<h2>Daily Score Rank</h2>
 			<?php
 				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
 				
@@ -70,13 +70,15 @@
 
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){	
-						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'><h3>Score</h3></td></thead>";
+						echo "<table width='100%'><thead><td width='10%'></td>";
+						echo "<td width='60%'>NAME</td>";
+						echo "<td width='30%'>Score</td></thead>";
 						$count = 0;
 						while(($row = $result->fetch_assoc()) && $count <10){
-							echo "<tr><td width='65%'>".$row['name']."</td>";
-							echo "<td width='35%'>".$row['score']."</td></tr>";
 							$count++;
+							echo "<tr><td width='10%'>".$count."</td>";
+							echo "<td width='60%'>".$row['name']."</td>";
+							echo "<td width='30%'>".$row['score']."</td></tr>";
 						}
 					} else
 					   echo "NOTHING ON THE BOARD";
@@ -87,7 +89,7 @@
 			?>
 		</div>
 		<div id="d_lv" class="tab-pane fade">
-			<h3>Daily Level Rank</h3>
+			<h2>Daily Level Rank</h2>
 			<?php
 				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
 				
@@ -101,13 +103,15 @@
 
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){	
-						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'><h3>LV</h3></td></thead>";
+						echo "<table width='100%'><thead><td width='10%'></td>";
+						echo "<td width='60%'>NAME</td>";
+						echo "<td width='30%'>LV</td></thead>";
 						$count = 0;
 						while(($row = $result->fetch_assoc()) && $count <10){
-							echo "<tr><td width='65%'>".$row['name']."</td>";
-							echo "<td width='35%'>".$row['level']."</td></tr>";
 							$count++;
+							echo "<tr><td width='10%'>".$count."</td>";
+							echo "<td width='60%'>".$row['name']."</td>";
+							echo "<td width='30%'>".$row['level']."</td></tr>";
 						}
 					} else
 					   echo "NOTHING ON THE BOARD";
@@ -118,7 +122,7 @@
 			?>
 		</div>
 		<div id="t_score" class="tab-pane fade">
-			<h3>Total Score Rank</h3>
+			<h2>Total Score Rank</h2>
 			<?php
 				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
 				if(mysqli_connect_errno($conn)){
@@ -129,13 +133,15 @@
 
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){	
-						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'>Score</td></thead>";
+						echo "<table width='100%'><thead><td width='10%'></td>";
+						echo "<td width='60%'>NAME</td>";
+						echo "<td width='30%'>Score</td></thead>";
 						$count = 0;
 						while(($row = $result->fetch_assoc()) && $count <10){
-							echo "<tr><td width='65%'>".$row['name']."</td>";
-							echo "<td width='35%'>".$row['score']."</td></tr>";
 							$count++;
+							echo "<tr><td width='10%'>".$count."</td>";
+							echo "<td width='60%'>".$row['name']."</td>";
+							echo "<td width='30%'>".$row['score']."</td></tr>";
 						}
 					} else
 					   echo "NOTHING ON THE BOARD";
@@ -146,7 +152,7 @@
 			?>
 		</div>
 		<div id="t_lv" class="tab-pane fade">
-			<h3>Total Level Rank</h3>
+			<h2>Total Level Rank</h2>
 			<?php
 			$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
 			if(mysqli_connect_errno($conn)){
@@ -157,13 +163,15 @@
 
 				$result = $conn->query($sql);
 				if($result->num_rows > 0){	
-					echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-					echo "<td width='35%'><h3>LV</h3></td></thead>";
+					echo "<table width='100%'><thead><td width='10%'></td>";
+						echo "<td width='60%'>NAME</td>";
+						echo "<td width='30%'>LV</td></thead>";
 					$count = 0;
 					while(($row = $result->fetch_assoc()) && $count <10){
-						echo "<tr><td width='65%'>".$row['name']."</td>";
-						echo "<td width='35%'>".$row['level']."</td></tr>";
 						$count++;
+						echo "<tr><td width='10%'>".$count."</td>";
+						echo "<td width='60%'>".$row['name']."</td>";
+						echo "<td width='30%'>".$row['level']."</td></tr>";
 					}
 				} else
 				   echo "NOTHING ON THE BOARD";
