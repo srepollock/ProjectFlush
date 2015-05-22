@@ -67,6 +67,8 @@ var lowerBackgroundGraphic = new Image();
 lowerBackgroundGraphic.src="./pics/lowerBackground.png";
 var speakerGraphic = new Image();
 speakerGraphic.src = "./pics/speaker.png";
+var mutedGraphic = new Image();
+mutedGraphic.src = "./pics/crossSpeaker.png";
 
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
@@ -78,7 +80,7 @@ var hintCost = 20;
 
 var muteButtonX = canvas.width*0.90;
 var muteButtonY = 10;
-var isMuted = true;
+var isMuted = false;
 
 //Displays the solution at the beginning of the game.
 var solutionVisible = true;
@@ -264,7 +266,11 @@ function drawMaze(){
 			//Drawing hint button
 			context.drawImage(hintButtonGraphic, hintButtonX, hintButtonY, 50, 20);
 			//Drawing mute button
-			context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
+			if(isMuted){
+				context.drawImage(mutedGraphic, muteButtonX, muteButtonY);
+			}else{
+				context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
+			}
 			
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
@@ -871,4 +877,11 @@ function buttonPressed(x,y){
 		return true;//if button is pressed, return so that it isn't registered as a movement click.
 	}
 	
+	/*Checking if mute button was pressed*/
+	if(x>muteButtonX&&x<muteButtonX+speakerGraphic.width
+		&&y>muteButtonY&&y<muteButtonY+speakerGraphic.height){
+		isMuted=!isMuted;
+		drawMaze();
+		return true;
+	}
 }
