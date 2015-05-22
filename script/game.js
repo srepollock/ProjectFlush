@@ -22,6 +22,8 @@ var gameOverSound = new Audio();
 gameOverSound.src = "./sound/gameOverSound.wav";
 var wallSound = new Audio();
 wallSound.src = "./sound/wall.wav";
+var achievementSound = new Audio();
+achievementSound.src = "./sound/achievement.wav";
 
 //Sets screen width
 var SCREENWIDTH = canvas.width;
@@ -69,6 +71,8 @@ var speakerGraphic = new Image();
 speakerGraphic.src = "./pics/speaker.png";
 var mutedGraphic = new Image();
 mutedGraphic.src = "./pics/crossSpeaker.png";
+var windowGraphic = new Image();
+windowGraphic.src = "./pics/messageWindow.png";
 
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
@@ -130,12 +134,21 @@ var userBrowser = "Unknown";
 var firstLevelAchievement = false;
 var firstPlayAchievement = false;
 var firstHintAchievement = false;
+var fifthLevelAchievement = false;
 
 //Codes for keys to be ignored by page navigation.
 var movementKeyArray=new Array(33,34,35,36,37,38,39,40);
 
+//variables for achievement messages to be displayed.
+var messages = new Array(4);
+var isShowingMessage = false;
+
 
 var nameInput = false;
+
+/*
+	Function to start the game.  called from html when the page is finished loading.
+*/
 function pageLoaded(){
 	checkBrowser();
 	loadCookie();
@@ -155,7 +168,9 @@ function pageLoaded(){
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
 
-/*Initializes a new game.*/
+/*
+	Initializes a new game.
+*/
 function startGame(){
 	isGameScreen = true;
 	isMenuScreen = false;
@@ -201,7 +216,7 @@ function drawGraphics(){
 }
 
 /**
-Starts the maze generating algorithm and then prints the map to the screen
+	Starts the maze generating algorithm and then prints the map to the screen
 **/
 function generateMap(){
 	drawSpot(1,1,Math.floor(Math.random() * 4));
@@ -218,7 +233,7 @@ function doPathfinding(){
 }
 
 /**
-Draws the current maze tiles to the canvas
+	Draws the current maze tiles to the canvas
 **/
 function drawMaze(){
 	//xy offsets so that the map is centered in the canvas
@@ -272,6 +287,8 @@ function drawMaze(){
 				context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
 			}
 			
+			if(isShowingMessage)displayAchievement();
+				
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
 				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));			
@@ -297,7 +314,7 @@ function drawMaze(){
 
 
 /**
-Checks that the passed position is clear on all sides except the side it came from.
+	Checks that the passed position is clear on all sides except the side it came from.
 **/
 function checkSpot(x, y, curx, cury){
 	
@@ -373,7 +390,7 @@ function drawSpot(x, y, prevDir){
 
 
 /**
-Finds path to the exit of the map
+	Finds path to the exit of the map
 **/
 function findPath(curx, cury, count){
 	
@@ -409,6 +426,9 @@ function findPath(curx, cury, count){
 	map[curx][cury] = 'C';
 }
 
+/*
+	Finalizes the pathfinding, drawing a path along the shortest movements to get to the end.
+*/
 function finalPath(curx, cury){
 	var comparex;
 	var comparey;
@@ -453,6 +473,9 @@ function finalPath(curx, cury){
 	return false;
 }
 
+/*
+	Flips visibility of the map solution.
+*/
 function solutionVisibility(){
 	if(solutionVisible){
 		solutionVisible=false;
@@ -465,22 +488,25 @@ function solutionVisibility(){
 }
 
 /**
-Function for handling mouse events.
-
+	Function for handling mouse events.
 **/
 function doMouseDown(event){
 	var x = event.pageX-canvas.offsetLeft;
 	var y = event.pageY-canvas.offsetTop;
 	
+	if(isShowingMessage){
+		isShowingMessage=false;
+		drawMaze();
+		return;
+	}
 	
 	if(!isMenuScreen){
-	
-	if(buttonPressed(x,y))return;
 	
 
 	controlVisualVisible=false;
 	if(!isGameOver&&showMapPause==0){
 	
+	if(buttonPressed(x,y))return;
 	
 	if(solutionVisible)solutionVisibility();
 	
@@ -506,7 +532,7 @@ function doMouseDown(event){
 }
 
 /**
-Movement functions.  Pretty self explanatory.
+	Movement functions.  Pretty self explanatory.
 **/
 function moveDown(){
 	if(map[playerPositionx][playerPositiony+1]!='.'){
@@ -589,6 +615,10 @@ function moveLeft(){
 	drawMaze();
 }
 
+/*
+	Checks if the player is on the exit tile
+	if so, generates the next level
+*/
 function checkForExit(){
 	if(playerPositionx==targetx&&playerPositiony==targety){
 		if(!isMuted)levelComplete.play();
@@ -596,6 +626,8 @@ function checkForExit(){
 		
 		//Gives you achievement for beating first level if you dont already have it.
 		if(gameLevel==1&&firstLevelAchievement==false)gainAchievement(0);
+		
+		if(gameLevel==5&&fifthLevelAchievement==false)gainAchievement(3);
 		
 		gameLevel++;
 
@@ -617,7 +649,7 @@ function checkForExit(){
 }
 
 /**
-just a function for printing out info prior to the ui
+	just a function for printing out info prior to the ui
 **/
 function testingOutput(){
 	context.font = "17px Arial";
@@ -625,7 +657,9 @@ function testingOutput(){
 	context.fillText(output, 10, canvas.height-20);
 }
 
-
+/*
+	Function to randomize exit position at the beginning of each level
+*/
 function randomizeExit(){
 	targetx = Math.floor(Math.random() * (width/2))+width/2-1;
 	targety = Math.floor(Math.random() * (height/2))+height/2-1;
@@ -663,16 +697,22 @@ function randomizeExit(){
 	}
 }
 
+/*
+	Checks that tile is on pathfinding path
+*/
 function onPath(){
 	return map[playerPositionx][playerPositiony]=='P';
 }
 
+/*
+	Takes care of all the count downs and anything that triggers on time.
+*/
 function timerFunction(){
 	fingerGraphicDown=!fingerGraphicDown;/*moving the finger up or down*/
 	if(showMapPause>0)showMapPause--;
 	if(isGameScreen){
 	if(timeLeft>0){
-	if(!controlVisualVisible){
+	if(!controlVisualVisible&&!isShowingMessage){
 		timeLeft--;
 		if(bonusTimer>0)bonusTimer--;
 	}
@@ -687,6 +727,9 @@ function timerFunction(){
 	}
 }
 
+/*
+	Draws game over screen to canvas
+*/
 function drawGameOver(){
 	context.clearRect ( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
 	context.drawImage(gameOverGraphic, (canvas.width/2)-82, (canvas.width/2)-154);
@@ -731,8 +774,8 @@ function sendphp() {
 }
 
 /*
-This code fixed the double tap function on mobile devices
-src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices
+	This code fixed the double tap function on mobile devices
+	src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-in-browser-on-touch-devices
 */
 (function($) {
   $.fn.nodoubletapzoom = function() {
@@ -752,7 +795,7 @@ src=http://stackoverflow.com/questions/10614481/disable-double-tap-zoom-option-i
 })(jQuery);
 
 /*
-Checks which browser the user is using.  keeps as Unknown if it isn't one listed.
+	Checks which browser the user is using.  keeps as Unknown if it isn't one listed.
 */
 function checkBrowser(){
 	var browserInfo = navigator.userAgent;
@@ -762,7 +805,7 @@ function checkBrowser(){
 }
 
 /*
-Loads and extracts variables from stored cookie
+	Loads and extracts variables from stored cookie
 */
 function loadCookie(){
 	var cookieString = document.cookie;
@@ -787,10 +830,15 @@ function loadCookie(){
 		firstHintAchievement = true;
 		//alert("first hint achievement loaded true.");
 	}
+	//check if the cookie string contains fifthLevelAchievement = true and set the current variable to true if true
+	if(cookieString.indexOf("fifthLevelAchievement=true")!=-1){
+		fifthLevelAchievement = true;
+		//alert("fifth level achievement loaded true.");
+	}
 }
 
 /*
-Saves achievements to the game cookie
+	Saves achievements to the game cookie
 */
 function saveCookie(){
 	var expiration = new Date();
@@ -798,41 +846,72 @@ function saveCookie(){
 	document.cookie="firstLevelAchievement="+firstLevelAchievement+"; expires="+expiration.toGMTString();
 	document.cookie="firstPlayAchievement="+firstPlayAchievement+"; expires="+expiration.toGMTString();
 	document.cookie="firstHintAchievement= "+firstHintAchievement+"; expires="+expiration.toGMTString();
+	document.cookie="fifthLevelAchievement= "+fifthLevelAchievement+"; expires="+expiration.toGMTString();
 }
 
 /*
-Gain an achievement by number passed: 0=first level, 1=first play, 2=first use of hint button
+	Gain an achievement by number passed: 0=first level, 1=first play, 2=first use of hint button
 */
 function gainAchievement(achievementNum){
 	switch(achievementNum){
 		case 0:
 		firstLevelAchievement=true;
-		alert("First level achievement!");
+		drawMaze();
+		messages[0] = "     First level";
+		messages[1] = "   achievement";
+		messages[2] = "     unlocked!";
+		isShowingMessage=true;
+		if(!isMuted)achievementSound.play();
+		drawMaze();
 		saveCookie();
 		break;
 		
 		case 1:
 		firstPlayAchievement=true;
-		alert("First play achievement!");
+		drawMaze();
+		messages[0] = "     First play";
+		messages[1] = "   achievement";
+		messages[2] = "     unlocked!";
+		isShowingMessage=true;
+		if(!isMuted)achievementSound.play();
+		drawMaze();
 		saveCookie();
 		break;
 		
 		case 2:
 		firstHintAchievement=true;
-		alert("First hint achievement!");
+		drawMaze();
+		messages[0] = "     First hint";
+		messages[1] = "   achievement";
+		messages[2] = "     unlocked!";
+		isShowingMessage=true;
+		if(!isMuted)achievementSound.play();
+		drawMaze();
+		saveCookie();
+		break;
+		
+		case 3:
+		fifthLevelAchievement=true;
+		drawMaze();
+		messages[0] = "     Fifth level";
+		messages[1] = "   achievement";
+		messages[2] = "     unlocked!";
+		isShowingMessage=true;
+		if(!isMuted)achievementSound.play();
+		drawMaze();
 		saveCookie();
 		break;
 	}
 }
 
 /*
-Function for handling keyboard movement.
+	Function for handling keyboard movement.
 */
 function doKeyDown(event){
 	
 	if(!isMenuScreen){
 	controlVisualVisible=false;
-	if(!isGameOver&&showMapPause==0){
+	if(!isGameOver&&showMapPause==0&&!isShowingMessage){
 	
 	
 	if(solutionVisible)solutionVisibility();
@@ -859,7 +938,8 @@ function doKeyDown(event){
 }
 
 /*
-
+	Takes x and y parameters of where the mouse was clicked
+	checks if position clicked is in bounds of any on screen buttons
 */
 function buttonPressed(x,y){
 	/*checking if the hint button was pressed*/
@@ -883,5 +963,15 @@ function buttonPressed(x,y){
 		isMuted=!isMuted;
 		drawMaze();
 		return true;
+	}
+}
+
+/*
+	Draws a window with text on screen.
+*/
+function displayAchievement(){
+	context.drawImage(windowGraphic, canvas.width/2-windowGraphic.width/2, canvas.height/2-windowGraphic.height/2);
+	for(var i=0; i<4; i++){
+		if(messages[i]!=undefined)context.fillText(messages[i], (canvas.width/2-windowGraphic.width/2)+12, (canvas.height/2-windowGraphic.height/2)+50+(i*20));
 	}
 }
