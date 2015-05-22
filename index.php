@@ -60,7 +60,7 @@
 			<div id="d_score" class="tab-pane fade in active">
 			<h2>Daily Score Rank</h2>
 			<?php
-				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+				$conn = mysqli_connect('mysql.hostinger.kr', 'u287266668_user', 'werbest404', 'u287266668_db');
 				date_default_timezone_set('America/Vancouver');
 				if(mysqli_connect_errno($conn)){
 					echo "fail to connect DB: " . mysqli_connect_error();
@@ -93,7 +93,7 @@
 		<div id="d_lv" class="tab-pane fade">
 			<h2>Daily Level Rank</h2>
 			<?php
-				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+				$conn = mysqli_connect('mysql.hostinger.kr', 'u287266668_user', 'werbest404', 'u287266668_db');
 				
 				if(mysqli_connect_errno($conn)){
 					echo "fail to connect DB: " . mysqli_connect_error();
@@ -126,7 +126,7 @@
 		<div id="t_score" class="tab-pane fade">
 			<h2>Total Score Rank</h2>
 			<?php
-				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+				$conn = mysqli_connect('mysql.hostinger.kr', 'u287266668_user', 'werbest404', 'u287266668_db');
 				if(mysqli_connect_errno($conn)){
 					echo "fail to connect DB: " . mysqli_connect_error();
 				}
@@ -157,7 +157,7 @@
 		<div id="t_lv" class="tab-pane fade">
 			<h2>Total Level Rank</h2>
 			<?php
-			$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+			$conn = mysqli_connect('mysql.hostinger.kr', 'u287266668_user', 'werbest404', 'u287266668_db');
 			if(mysqli_connect_errno($conn)){
 				echo "fail to connect DB: " . mysqli_connect_error();
 			}
