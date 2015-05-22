@@ -305,28 +305,31 @@ function drawMaze(){
 				context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
 			}
 			
+			//Drawing upper buttons
 			context.drawImage(trophyGraphic, muteButtonX-20, muteButtonY);
 			context.drawImage(pauseGraphic, muteButtonX-40, muteButtonY);
 			
-				
+			//Drawing guide graphics for first level
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
 				context.drawImage(rightArrowGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));			
 				context.drawImage(upArrowGraphic, (canvas.width/2)-(upArrowGraphic.width/2), 10);
 				context.drawImage(downArrowGraphic, (canvas.width/2)-(downArrowGraphic.width/2), canvas.height-40-downArrowGraphic.height);
-			}			
+			}		
+			//Text portion of guide graphics
 			if(controlVisualVisible){
 				context.font = "17px Arial";
 				context.fillText("Memorize this path to the toilet", offsetx-32, offsety-12);
 				context.fillText("Then retrace it as fast as you can!", offsetx-50, offsety+width*imgSize+16);
 				
-				if(fingerGraphicDown){/*Checking if the finger graphic is up or town*/
+				if(fingerGraphicDown){/*Checking if the finger graphic is up or down*/
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2));
 				}else{
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2)-20);
 				}
 			}
 			
+			//Drawing graphic for achievement menu window
 			if(isAchievementMenu){
 				context.drawImage(achievementsWindowGraphic, canvas.width/2-achievementsWindowGraphic.width/2, canvas.height/2-achievementsWindowGraphic.height/2);				
 				if(firstPlayAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+44);
@@ -335,9 +338,11 @@ function drawMaze(){
 				if(fifthLevelAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+136);
 			}
 			
+			//draw achievement window if its currently being displayed
 			if(isShowingMessage)displayAchievement();
 		}
 	}
+	//prints score and time at the bottom of the screen
 	testingOutput();
 }
 
@@ -421,6 +426,8 @@ function drawSpot(x, y, prevDir){
 
 /**
 	Finds path to the exit of the map
+	maps out the distance in moves to every possible position in the map from the start position.
+	the steps are saved in the 2d array called distance map.
 **/
 function findPath(curx, cury, count){
 	
@@ -458,6 +465,7 @@ function findPath(curx, cury, count){
 
 /*
 	Finalizes the pathfinding, drawing a path along the shortest movements to get to the end.
+	Starts at the passed position and follows the path of least steps back to the beginning
 */
 function finalPath(curx, cury){
 	var comparex;
@@ -493,7 +501,7 @@ function finalPath(curx, cury){
 		if(distanceMap[comparex][comparey]>0){
 			if(distanceMap[comparex][comparey]<distanceMap[curx][cury]){
 				pathFound = finalPath(parseInt(comparex), parseInt(comparey));
-				if(pathFound===true){
+				if(pathFound===true){//once it finds true it is passed back through the stack marking the path to the exit
 					map[curx][cury]='P';
 					return true;
 				}
@@ -549,6 +557,7 @@ function doMouseDown(event){
 	
 	if(solutionVisible)solutionVisibility();
 	
+	//Checks which quadrant of the screen the mouse click was in
 	if(x>SCREENWIDTH/2
 	&&y>(SCREENHEIGHT/2)-(x-(SCREENWIDTH/2))
 	&&y<(SCREENHEIGHT/2)+(x-(SCREENWIDTH/2))){
@@ -564,7 +573,7 @@ function doMouseDown(event){
 	}
 	}
 	}
-	}else{
+	}else{//if there was a click, but it is in the menu screen, start game
 		startGame();
 		isMenuScreen = false;
 		if(firstPlayAchievement==false)gainAchievement(1);
@@ -573,25 +582,26 @@ function doMouseDown(event){
 
 /**
 	Movement functions.  Pretty self explanatory.
+	wrote specific commends only for moveDown, is same for all other move functions.
 **/
 function moveDown(){
-	if(map[playerPositionx][playerPositiony+1]!='.'){
-		if(map[playerPositionx][playerPositiony+1]=='P'){
-			if(userBrowser!="Unknown")moveSound.currentTime=0;
+	if(map[playerPositionx][playerPositiony+1]!='.'){//If desired position is not a wall  . = wall 
+		if(map[playerPositionx][playerPositiony+1]=='P'){ //If desired position is on the path
+			if(userBrowser!="Unknown")moveSound.currentTime=0; //If not using an unknown browser, or IE
 			if(!isMuted)moveSound.play();
-		}else{
+		}else{//else play bad move sound
 			if(!isMuted)badMoveSound.play();
 		}
-		playerPositiony++;
-		if(!onPath()){
+		playerPositiony++;//move down
+		if(!onPath()){//if not on path after move, teleport back to start
 			playerPositionx=startx;
 			playerPositiony=starty;
 		}
-	}else{
+	}else{//else, trying to move to a wall.  play wall collision sound
 		wallSound.currentTime=0;
 		if(!isMuted)wallSound.play();
 	}
-	checkForExit()
+	checkForExit()//check if they have reached the exit
 	drawMaze();
 }
 function moveUp(){
@@ -671,13 +681,14 @@ function checkForExit(){
 		
 		gameLevel++;
 
-		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){
+		if(parseInt(width)+2<=24&&parseInt(height)+2<=24&&gameLevel%2==0){//if map is under max size, increase size
 			width+=2;
 			height+=2;
-			if(canvas.width-(imgSize*width)<70){
+			if(canvas.width-(imgSize*width)<70){//if map is getting too big, resize tiles.
 				imgSize = (canvas.width-70)/width;
 			}
 		}
+		//setting up next level.
 		showMapPause = 1;
 		drawGraphics();
 		generateMap();
@@ -690,6 +701,7 @@ function checkForExit(){
 
 /**
 	just a function for printing out info prior to the ui
+	Ended up being the final print function.
 **/
 function testingOutput(){
 	context.font = "17px Arial";
@@ -701,10 +713,10 @@ function testingOutput(){
 	Function to randomize exit position at the beginning of each level
 */
 function randomizeExit(){
-	targetx = Math.floor(Math.random() * (width/2))+width/2-1;
+	targetx = Math.floor(Math.random() * (width/2))+width/2-1;//picks random position for exit on the further half of the level
 	targety = Math.floor(Math.random() * (height/2))+height/2-1;
 	
-	if(map[targetx][targety]=="."){
+	if(map[targetx][targety]=="."){//if desired ending is a wall, check the four adjacent directions until you find a legal space
 	for(var i=0; i<4; i++){
 		switch(i){
 			case 0:
@@ -733,7 +745,7 @@ function randomizeExit(){
 				break;
 		}
 	}
-	randomizeExit();
+	randomizeExit();//if a legal space is not found, try again
 	}
 }
 
@@ -752,13 +764,13 @@ function timerFunction(){
 	if(showMapPause>0)showMapPause--;
 	if(isGameScreen){
 	if(timeLeft>0){
-	if(!controlVisualVisible&&!isShowingMessage&&!isPaused){
+	if(!controlVisualVisible&&!isShowingMessage&&!isPaused){//if game is in a state where the clock is ticking
 		if(!isMuted&&timeLeft<=10)timeLowSound.play();
 		timeLeft--;
 		if(bonusTimer>0)bonusTimer--;
 	}
 	drawMaze();
-	}else if (!isGameOver){
+	}else if (!isGameOver){//time is up, cause a game over
 		if(!isMuted)gameOverSound.play();
 		isGameOver=true;
 		drawGameOver();
@@ -774,7 +786,7 @@ function timerFunction(){
 function drawGameOver(){
 	context.clearRect ( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
 	context.drawImage(gameOverGraphic, (canvas.width/2)-82, (canvas.width/2)-154);
-	testingOutput();
+	testingOutput();//print final score
 }
 
 /*
@@ -825,7 +837,7 @@ function sendphp() {
 })(jQuery);
 
 /*
-	Checks which browser the user is using.  keeps as Unknown if it isn't one listed.
+	Checks which browser the user is using.  keeps as Unknown if it isn't one listed, such as IE.
 */
 function checkBrowser(){
 	var browserInfo = navigator.userAgent;
@@ -838,9 +850,9 @@ function checkBrowser(){
 	Loads and extracts variables from stored cookie
 */
 function loadCookie(){
-	var cookieString = document.cookie;
+	var cookieString = document.cookie; //Stick cookie in a string
 	
-	if(cookieString==""){
+	if(cookieString==""){//if no cookie, create a new one
 		//alert("Empty cookie");
 		saveCookie();
 	}
@@ -872,7 +884,7 @@ function loadCookie(){
 */
 function saveCookie(){
 	var expiration = new Date();
-	expiration.setMinutes(expiration.getMinutes()+2);
+	expiration.setFullYear(expiration.getFullYear()+2);//setting cookie expiration from current time
 	document.cookie="firstLevelAchievement="+firstLevelAchievement+"; expires="+expiration.toGMTString();
 	document.cookie="firstPlayAchievement="+firstPlayAchievement+"; expires="+expiration.toGMTString();
 	document.cookie="firstHintAchievement= "+firstHintAchievement+"; expires="+expiration.toGMTString();
@@ -948,16 +960,17 @@ function doKeyDown(event){
 
 	event = event || window.event;
 	
-	if (event.keyCode == '38') {
+	
+	if (event.keyCode == '38') {//up
         moveUp();
     }
-    else if (event.keyCode == '40') {
+    else if (event.keyCode == '40') {//down
 		moveDown();
     }
-    else if (event.keyCode == '37') {
+    else if (event.keyCode == '37') {//left
        moveLeft();
     }
-    else if (event.keyCode == '39') {
+    else if (event.keyCode == '39') {//right
        moveRight();
     }
 	}
