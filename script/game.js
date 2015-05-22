@@ -77,6 +77,12 @@ var pauseGraphic = new Image();
 pauseGraphic.src = "./pics/pause.png";
 var pausedTextGraphic = new Image();
 pausedTextGraphic.src = "./pics/paused.png";
+var achievementsWindowGraphic = new Image();
+achievementsWindowGraphic.src = "./pics/achievementsWindow.png";
+var checkMarkGraphic = new Image();
+checkMarkGraphic.src = "./pics/checkMark.png";
+var trophyGraphic = new Image();
+trophyGraphic.src = "./pics/achievement.png";
 
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
@@ -130,6 +136,7 @@ var isMenuScreen = true;
 var isGameScreen = false;
 var isGameOver = false;
 var controlVisualVisible = true;
+var isAchievementMenu = false;
 
 //Which browser the user is using
 var userBrowser = "Unknown";
@@ -295,9 +302,9 @@ function drawMaze(){
 				context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
 			}
 			
-			context.drawImage(pauseGraphic, muteButtonX-20, muteButtonY);
+			context.drawImage(trophyGraphic, muteButtonX-20, muteButtonY);
+			context.drawImage(pauseGraphic, muteButtonX-40, muteButtonY);
 			
-			if(isShowingMessage)displayAchievement();
 				
 			if(gameLevel==1){
 				context.drawImage(leftArrowGraphic, 10, (canvas.height/2)-(leftArrowGraphic.height/2));
@@ -316,6 +323,16 @@ function drawMaze(){
 					context.drawImage(fingerGraphic, canvas.width-10-rightArrowGraphic.width, (canvas.height/2)-(rightArrowGraphic.height/2)-20);
 				}
 			}
+			
+			if(isAchievementMenu){
+				context.drawImage(achievementsWindowGraphic, canvas.width/2-achievementsWindowGraphic.width/2, canvas.height/2-achievementsWindowGraphic.height/2);				
+				if(firstPlayAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+44);
+				if(firstLevelAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+74);
+				if(firstHintAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+104);
+				if(fifthLevelAchievement)context.drawImage(checkMarkGraphic, canvas.width/2-achievementsWindowGraphic.width/2+20, canvas.height/2-achievementsWindowGraphic.height/2+136);
+			}
+			
+			if(isShowingMessage)displayAchievement();
 		}
 	}
 	testingOutput();
@@ -506,6 +523,13 @@ function doMouseDown(event){
 	
 	if(isShowingMessage){
 		isShowingMessage=false;
+		drawMaze();
+		return;
+	}
+	
+	if(isAchievementMenu){
+		isAchievementMenu=false;
+		isPaused=false;
 		drawMaze();
 		return;
 	}
@@ -978,8 +1002,17 @@ function buttonPressed(x,y){
 		return true;
 	}
 	
+	/*Checking if achievements button was pressed*/
+	if(x>muteButtonX-20&&x<muteButtonX+trophyGraphic.width
+		&&y>muteButtonY&&y<muteButtonY+trophyGraphic.height){
+		isPaused=true;
+		isAchievementMenu=true;
+		drawMaze();
+		return true;
+	}
+	
 	/*Checking if pause button was pressed*/
-	if(x>muteButtonX-20&&x<muteButtonX+pauseGraphic.width
+	if(x>muteButtonX-40&&x<muteButtonX+pauseGraphic.width
 		&&y>muteButtonY&&y<muteButtonY+pauseGraphic.height){
 		isPaused=!isPaused;
 		limitedSight=true;
