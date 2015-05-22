@@ -777,33 +777,22 @@ function drawGameOver(){
 	Sends the score to the database for the leaderboard.
 */
 function sendphp() {
+	//when game is over, nameInput will true.
     if (nameInput) {
         var name = prompt("Enter your name:", "Player");
+		//only post the values when player input the name.
         if(name != null){
             var req;
             if(window.XMLHttpRequest){
                 req = new XMLHttpRequest();
-            }else{
+            }else{ //IE version
                 req = new ActiveXObject("Microsoft.XMLHTTP");
             }
-
-            req.onreadystatechange = function (e) {
-                if (req.readyState == 4) {
-                //    alert(req.responseText + "success.    name:"+name+", score: "+score+", level: "+gameLevel);
-                } else {
-                //    alert("Error loading page." + req.readyState);
-                }
-            }
-        
-
             req.open("POST", "leader.php" ,true);
-
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send("name=" + name + "&score=" + score + "&level=" + gameLevel);
-
-            
-        
+            req.send("na=" + name + "&sr=" + score + "&lv=" + gameLevel);
         }
+		//time interval for updating database
         setTimeout(function () { location.href = "./leader.php"; }, 500);
         nameInput = false; 
     }
