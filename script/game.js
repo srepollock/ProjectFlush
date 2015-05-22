@@ -138,6 +138,8 @@ function pageLoaded(){
 		}
 		return true;
 	});
+	context.fillStyle="#41ADFF";
+	context.fillRect( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
 	context.drawImage(menuScreenGraphic, canvas.width/2-menuScreenGraphic.width/2, 0);
 	context.drawImage(playButtonGraphic, (canvas.width/2)-(playButtonGraphic.width/2), canvas.height*0.75);
 }
@@ -211,7 +213,9 @@ Draws the current maze tiles to the canvas
 function drawMaze(){
 	offsetx = (canvas.width/2)-(width*imgSize)/2;
 	offsety = (canvas.height/2)-(height*imgSize)/2;
-	context.clearRect ( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
+	context.fillStyle="#41ADFF";
+	context.fillRect( 0 , 0 , canvas.width, canvas.height );/*Clearing canvas*/
+	context.fillStyle="#000000";
 	for(var i=0; i<height; i++){
 		for(var j=0; j<width; j++){
 			if(!limitedSight||
