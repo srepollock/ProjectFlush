@@ -73,6 +73,10 @@ var mutedGraphic = new Image();
 mutedGraphic.src = "./pics/crossSpeaker.png";
 var windowGraphic = new Image();
 windowGraphic.src = "./pics/messageWindow.png";
+var pauseGraphic = new Image();
+pauseGraphic.src = "./pics/pause.png";
+var pausedTextGraphic = new Image();
+pausedTextGraphic.src = "./pics/paused.png";
 
 var imgSize = 16;/*pixel width and height of tiles*/
 var fingerGraphicDown = false;
@@ -142,6 +146,8 @@ var movementKeyArray=new Array(33,34,35,36,37,38,39,40);
 //variables for achievement messages to be displayed.
 var messages = new Array(4);
 var isShowingMessage = false;
+
+var isPaused = false;
 
 
 var nameInput = false;
@@ -251,8 +257,8 @@ function drawMaze(){
 			
 			//If they can see the whole map, or the position is located directly next to the player.
 			if(!limitedSight||
-			(j>=playerPositionx-1&&j<=playerPositionx+1
-			&&i>=playerPositiony-1&&i<=playerPositiony+1)){
+			((j>=playerPositionx-1&&j<=playerPositionx+1
+			&&i>=playerPositiony-1&&i<=playerPositiony+1)&&!isPaused)){
 				
 				if(map[j][i]=='.'){/*Wall*/
 					context.drawImage(wall, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
@@ -276,6 +282,8 @@ function drawMaze(){
 				context.drawImage(darkSquareGraphic, offsetx+j*imgSize, offsety+i*imgSize, imgSize, imgSize);
 			}
 			
+			if(isPaused)context.drawImage(pausedTextGraphic, canvas.width/2-pausedTextGraphic.width/2, canvas.height/2-pausedTextGraphic.height/2);
+			
 			//Drawing lower background panel
 			context.drawImage(lowerBackgroundGraphic, 0, canvas.height-40, canvas.width, 40);
 			//Drawing hint button
@@ -286,6 +294,8 @@ function drawMaze(){
 			}else{
 				context.drawImage(speakerGraphic, muteButtonX, muteButtonY);
 			}
+			
+			context.drawImage(pauseGraphic, muteButtonX-20, muteButtonY);
 			
 			if(isShowingMessage)displayAchievement();
 				
@@ -508,6 +518,8 @@ function doMouseDown(event){
 	
 	if(buttonPressed(x,y))return;
 	
+	if(!isPaused){
+	
 	if(solutionVisible)solutionVisibility();
 	
 	if(x>SCREENWIDTH/2
@@ -522,6 +534,7 @@ function doMouseDown(event){
 		moveDown();
 	} else if(y<SCREENHEIGHT/2){
 		moveUp();
+	}
 	}
 	}
 	}else{
@@ -712,7 +725,7 @@ function timerFunction(){
 	if(showMapPause>0)showMapPause--;
 	if(isGameScreen){
 	if(timeLeft>0){
-	if(!controlVisualVisible&&!isShowingMessage){
+	if(!controlVisualVisible&&!isShowingMessage&&!isPaused){
 		timeLeft--;
 		if(bonusTimer>0)bonusTimer--;
 	}
@@ -911,14 +924,14 @@ function doKeyDown(event){
 	
 	if(!isMenuScreen){
 	controlVisualVisible=false;
-	if(!isGameOver&&showMapPause==0&&!isShowingMessage){
+	if(!isGameOver&&showMapPause==0&&!isShowingMessage&&!isPaused){
 	
 	
 	if(solutionVisible)solutionVisibility();
 
 	event = event || window.event;
 	
-	 if (event.keyCode == '38') {
+	if (event.keyCode == '38') {
         moveUp();
     }
     else if (event.keyCode == '40') {
@@ -944,15 +957,15 @@ function doKeyDown(event){
 function buttonPressed(x,y){
 	/*checking if the hint button was pressed*/
 	if(x>hintButtonX&&x<hintButtonX+hintButtonGraphic.width
-		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height){
+		&&y>hintButtonY&&y<hintButtonY+hintButtonGraphic.height&&!isPaused){
 		if(!solutionVisible&&limitedSight){
 			solutionVisible=true;
 			limitedSight=false;
-			drawMaze();
 			if(firstHintAchievement==false)gainAchievement(2);
 			/*minuses the hint cost from the time left.  sets it to 0 if it would be negative.*/
 			if(timeLeft-hintCost<0)timeLeft=0;
 			else timeLeft-=hintCost;
+			drawMaze();
 		}
 		return true;//if button is pressed, return so that it isn't registered as a movement click.
 	}
@@ -961,6 +974,16 @@ function buttonPressed(x,y){
 	if(x>muteButtonX&&x<muteButtonX+speakerGraphic.width
 		&&y>muteButtonY&&y<muteButtonY+speakerGraphic.height){
 		isMuted=!isMuted;
+		drawMaze();
+		return true;
+	}
+	
+	/*Checking if pause button was pressed*/
+	if(x>muteButtonX-20&&x<muteButtonX+pauseGraphic.width
+		&&y>muteButtonY&&y<muteButtonY+pauseGraphic.height){
+		isPaused=!isPaused;
+		limitedSight=true;
+		solutionVisible=false;
 		drawMaze();
 		return true;
 	}
