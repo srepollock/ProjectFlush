@@ -38,10 +38,6 @@ li {
 
 #score {
     text-align: center;
-    color: #FAFAFA;
-    font-size: 170%;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    border-radius: 25px;
     background: #FFFFD4;
     padding: 20px;
     height: auto;
@@ -70,10 +66,15 @@ div #about {
 
 thead{
     border-bottom: 5px double black;
-    font-size:  110%;
-    color:  #c5cdd0;
+    font-size:  140%;
+    color:  black;
 }
 tr{
-	font-size: 80%;
-	color: #c5cdd0;
+	font-size: 120%;
+	color: dark-gray;
+	height: 110%;
+}
+.nav-tabs li{
+	width: 24%;
+	display: inline-block;
 }

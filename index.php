@@ -55,23 +55,84 @@
 		  <li><a data-toggle="tab" href="#t_score">Total Score</a></li>
 		  <li><a data-toggle="tab" href="#t_lv">Total Level</a></li>
 		</ul>
-
+		
 		<div class="tab-content">
 			<div id="d_score" class="tab-pane fade in active">
 			<h3>Daily Score Rank</h3>
+			<?php
+				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+				date_default_timezone_set('America/Vancouver');
+				if(mysqli_connect_errno($conn)){
+					echo "fail to connect DB: " . mysqli_connect_error();
+				}
+				else{
+					date_default_timezone_set('America/Vancouver');
+					$curdate = date("Y-m-d");
+					$sql = "SELECT name, score FROM Score WHERE date >='$curdate' ORDER BY score DESC, level DESC";
+
+					$result = $conn->query($sql);
+					if($result->num_rows > 0){	
+						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
+						echo "<td width='35%'><h3>Score</h3></td></thead>";
+						$count = 0;
+						while(($row = $result->fetch_assoc()) && $count <10){
+							echo "<tr><td width='65%'>".$row['name']."</td>";
+							echo "<td width='35%'>".$row['score']."</td></tr>";
+							$count++;
+						}
+					} else
+					   echo "NOTHING ON THE BOARD";
+					echo "</table>";
+				}
+				$conn->close();
+			?>
+		</div>
+		
+		<div id="d_lv" class="tab-pane fade">
+			<h3>Daily Level Rank</h3>
+			<?php
+				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
+				
+				if(mysqli_connect_errno($conn)){
+					echo "fail to connect DB: " . mysqli_connect_error();
+				}
+				else{
+					date_default_timezone_set('America/Vancouver');
+					$curdate = date("Y-m-d");
+					$sql = "SELECT name, level FROM Score WHERE date >='$curdate' ORDER BY level DESC, score DESC";
+
+					$result = $conn->query($sql);
+					if($result->num_rows > 0){	
+						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
+						echo "<td width='35%'><h3>LV</h3></td></thead>";
+						$count = 0;
+						while(($row = $result->fetch_assoc()) && $count <10){
+							echo "<tr><td width='65%'>".$row['name']."</td>";
+							echo "<td width='35%'>".$row['level']."</td></tr>";
+							$count++;
+						}
+					} else
+					   echo "NOTHING ON THE BOARD";
+					echo "</table>";
+				}
+				$conn->close();
+			?>
+		</div>
+		
+		<div id="t_score" class="tab-pane fade">
+			<h3>Total Score Rank</h3>
 			<?php
 				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
 				if(mysqli_connect_errno($conn)){
 					echo "fail to connect DB: " . mysqli_connect_error();
 				}
 				else{
-					//echo "<br><h2> [Today Score Rank]</h2>";
-					$sql = "SELECT name, score FROM Score WHERE date >=CURDATE() ORDER BY score DESC, level DESC";
+					$sql = "SELECT name, score FROM Score ORDER BY score DESC, level DESC";
 
 					$result = $conn->query($sql);
 					if($result->num_rows > 0){	
 						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'><h3>LV</h3></td></thead>";
+						echo "<td width='35%'>Score</td></thead>";
 						$count = 0;
 						while(($row = $result->fetch_assoc()) && $count <10){
 							echo "<tr><td width='65%'>".$row['name']."</td>";
@@ -86,62 +147,7 @@
 				$conn->close();
 			?>
 		</div>
-		<div id="d_lv" class="tab-pane fade">
-			<h3>Daily Level Rank</h3>
-			<?php
-				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
-				if(mysqli_connect_errno($conn)){
-					echo "fail to connect DB: " . mysqli_connect_error();
-				}
-				else{
-					$sql = "SELECT name, level FROM Score WHERE date >=CURDATE() ORDER BY level DESC, score DESC";
-
-					$result = $conn->query($sql);
-					if($result->num_rows > 0){	
-						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'><h3>LV</h3></td></thead>";
-						$count = 0;
-						while(($row = $result->fetch_assoc()) && $count <10){
-							echo "<tr><td width='65%'>".$row['name']."</td>";
-							echo "<td width='35%'>".$row['level']."</td></tr>";
-							$count++;
-						}
-					} else
-					   echo "NOTHING ON THE BOARD";
-
-					echo "</table>";
-				}
-				$conn->close();
-			?>
-		</div>
-		<div id="t_score" class="tab-pane fade">
-			<h3>Total Score Rank</h3>
-			<?php
-				$conn = mysqli_connect('mysql.hostinger.kr', 'u544216313_user', 'werbest404', 'u544216313_db');
-				if(mysqli_connect_errno($conn)){
-					echo "fail to connect DB: " . mysqli_connect_error();
-				}
-				else{
-					$sql = "SELECT name, level FROM Score  ORDER BY level DESC, score DESC";
-
-					$result = $conn->query($sql);
-					if($result->num_rows > 0){	
-						echo "<table width='100%'><thead><td width='65%'>NAME</td>";
-						echo "<td width='35%'>LV</td></thead>";
-						$count = 0;
-						while(($row = $result->fetch_assoc()) && $count <10){
-							echo "<tr><td width='65%'>".$row['name']."</td>";
-							echo "<td width='35%'>".$row['level']."</td></tr>";
-							$count++;
-						}
-					} else
-					   echo "NOTHING ON THE BOARD";
-
-					echo "</table>";
-				}
-				$conn->close();
-			?>
-		</div>
+		
 		<div id="t_lv" class="tab-pane fade">
 			<h3>Total Level Rank</h3>
 			<?php
@@ -150,7 +156,7 @@
 				echo "fail to connect DB: " . mysqli_connect_error();
 			}
 			else{
-				$sql = "SELECT name, score FROM Score ORDER BY score DESC, level DESC";
+				$sql = "SELECT name, level FROM Score ORDER BY level DESC, score DESC";
 
 				$result = $conn->query($sql);
 				if($result->num_rows > 0){	
@@ -159,7 +165,7 @@
 					$count = 0;
 					while(($row = $result->fetch_assoc()) && $count <10){
 						echo "<tr><td width='65%'>".$row['name']."</td>";
-						echo "<td width='35%'>".$row['score']."</td></tr>";
+						echo "<td width='35%'>".$row['level']."</td></tr>";
 						$count++;
 					}
 				} else
